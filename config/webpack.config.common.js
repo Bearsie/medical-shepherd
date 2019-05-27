@@ -7,7 +7,7 @@ const cssnano = require("cssnano");
 const devMode = process.env.NODE_ENV !== "production";
 
 module.exports = {
-  entry: "./src/main.jsx",
+  entry: path.resolve(__dirname, "../src/main.jsx"),
   output: {
     path: path.resolve(__dirname, "../www"),
     publicPath: "/",
