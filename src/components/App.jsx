@@ -7,7 +7,6 @@ import * as config from "../config";
 import routes from "../routes";
 import Platform from "../services/Platform";
 import { SideNav } from "./modals/SideNav";
-import { mergeStyles } from "@uifabric/merge-styles";
 
 const f7params = {
   id: config.appId,
@@ -41,10 +40,10 @@ export const App = () => {
   }, []);
 
   return (
-    <AppRoot params={f7params} routes={routes} colorTheme="lightblue" >
+    <AppRoot params={f7params} routes={routes} >
       <Statusbar />
       <SideNav />
-      <View id="main-view" url="/" main className="ios-edges" />
+      <View id="main-view" url="/" main/>
     </AppRoot>
   );
 };

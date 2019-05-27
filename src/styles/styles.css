@@ -1,0 +1,18 @@
+/* Custom color theme */
+
+:root {
+    --f7-theme-color: #16ade1;
+    --f7-theme-color-rgb: 22, 173, 225;
+    --f7-theme-color-shade: #102232;
+    --f7-theme-color-tint: #2db5e4;
+
+    --f7-font-family: Montserrat,Roboto,system-ui,Noto,Helvetica,Arial,sans-serif;
+    --f7-text-color: #1B3954;
+
+    --f7-navbar-title-font-weight: 800;
+    --f7-navbar-title-text-align: center;
+    --f7-navbar-title-font-size: 22px;
+    --f7-navbar-title-margin-left: auto;
+    --f7-navbar-bg-color: white;
+    --f7-bars-text-color: #1B3954;
+}
