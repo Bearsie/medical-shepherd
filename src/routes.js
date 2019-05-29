@@ -5,6 +5,7 @@ import { Home } from './components/pages/Home';
 import NotFoundPage from './components/pages/NotFoundPage';
 import { Prescriptions } from './components/pages/Prescriptions';
 import { Profile } from './components/pages/Profile';
+import { Welcome } from './components/pages/Welcome';
 
 export const routePath = {
   Appointments: '/appointments/',
@@ -13,9 +14,14 @@ export const routePath = {
   Home: '/',
   Prescriptions: '/prescriptions/',
   Profile: '/profile/',
+  Welcome: '/welcome/',
 };
 
 export default [
+  {
+    path: routePath.Welcome,
+    component: Welcome,
+  },
   {
     path: routePath.Home,
     component: Home,
