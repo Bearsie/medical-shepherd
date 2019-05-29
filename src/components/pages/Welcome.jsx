@@ -57,7 +57,7 @@ export const Welcome = () => {
         <Block>
           <Row tag="p">
             <Col tag="span">
-              <Button large outline href={routePath.Home}>Register</Button>
+              <Button large outline href={routePath.Register}>Register</Button>
             </Col>
             <Col tag="span">
               <Button large fill color="#ffffff" href={routePath.Home}>Log in</Button>

@@ -6,6 +6,7 @@ import NotFoundPage from './components/pages/NotFoundPage';
 import { Prescriptions } from './components/pages/Prescriptions';
 import { Profile } from './components/pages/Profile';
 import { Welcome } from './components/pages/Welcome';
+import { Register } from './components/pages/Register';
 
 export const routePath = {
   Appointments: '/appointments/',
@@ -14,6 +15,7 @@ export const routePath = {
   Home: '/',
   Prescriptions: '/prescriptions/',
   Profile: '/profile/',
+  Register: '/register/',
   Welcome: '/welcome/',
 };
 
@@ -45,6 +47,10 @@ export default [
   {
     path: routePath.Appointments,
     component: Appointments,
+  },
+  {
+    path: routePath.Register,
+    component: Register,
   },
   {
     path: '(.*)',

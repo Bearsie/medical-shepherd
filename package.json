@@ -73,7 +73,8 @@
     "framework7-react": "4.2.2",
     "prop-types": "15.7.2",
     "react": "16.8.6",
-    "react-dom": "16.8.6"
+    "react-dom": "16.8.6",
+    "react-social-login-buttons": "2.3.1"
   },
   "cordova": {
     "plugins": {
