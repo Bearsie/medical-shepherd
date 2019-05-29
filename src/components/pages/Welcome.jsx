@@ -60,7 +60,7 @@ export const Welcome = () => {
               <Button large outline href={routePath.Register}>Register</Button>
             </Col>
             <Col tag="span">
-              <Button large fill color="#ffffff" href={routePath.Home}>Log in</Button>
+              <Button large fill color="#ffffff" href={routePath.Login}>Log in</Button>
             </Col>
           </Row>
         </Block>

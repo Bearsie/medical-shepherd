@@ -2,6 +2,7 @@ import { Appointments } from './components/pages/Appointments';
 import { Diagnosis } from './components/pages/Diagnosis';
 import { History } from './components/pages/History';
 import { Home } from './components/pages/Home';
+import { Login } from './components/pages/Login';
 import NotFoundPage from './components/pages/NotFoundPage';
 import { Prescriptions } from './components/pages/Prescriptions';
 import { Profile } from './components/pages/Profile';
@@ -13,6 +14,7 @@ export const routePath = {
   Diagnosis: '/diagnosis/',
   History: '/history/',
   Home: '/',
+  Login: '/login',
   Prescriptions: '/prescriptions/',
   Profile: '/profile/',
   Register: '/register/',
@@ -47,6 +49,10 @@ export default [
   {
     path: routePath.Appointments,
     component: Appointments,
+  },
+  {
+    path: routePath.Login,
+    component: Login,
   },
   {
     path: routePath.Register,
