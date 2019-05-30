@@ -42,9 +42,8 @@ export const App = () => {
   return (
     <AppRoot params={f7params} routes={routes} >
       <Statusbar />
-      <View url="/welcome/"></View>
       <SideNav />
-      <View id="main-view" url="/" main ></View>
+      <View url="/welcome/" main id="main-view" />
     </AppRoot>
   );
 };
