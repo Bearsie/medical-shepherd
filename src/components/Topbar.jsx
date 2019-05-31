@@ -7,7 +7,6 @@ import React from 'react';
 import { colorSecondary } from '../styles';
 
 const titleStyles = mergeStyles({
-  width: '-webkit-fill-available',
   color: colorSecondary,
   right: '24px',
 });
