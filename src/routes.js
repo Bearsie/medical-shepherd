@@ -3,7 +3,7 @@ import { Diagnosis } from './components/pages/Diagnosis';
 import { History } from './components/pages/History';
 import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
-import NotFoundPage from './components/pages/NotFoundPage';
+import { NotFoundPage } from './components/pages/NotFoundPage';
 import { Prescriptions } from './components/pages/Prescriptions';
 import { Profile } from './components/pages/Profile';
 import { Welcome } from './components/pages/Welcome';
