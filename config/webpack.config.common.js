@@ -102,6 +102,10 @@ module.exports = {
         from: path.join(__dirname, "../src/index.html"),
         to: path.join(__dirname, "../www/index.html"),
       },
+      { 
+        from: path.join(__dirname, "../src/assets/img/welcoming-shepherd.jpg"),
+        to: path.join(__dirname, "../www/img/welcoming-shepherd.jpg"),
+      },
     ]),
   ]
 };
