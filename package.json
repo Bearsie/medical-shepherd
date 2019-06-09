@@ -12,43 +12,79 @@
   ],
   "author": "Wojciech Niedźwiedź, Kamil Smoleń, Grzegorz Roczniak, Patryk Maziarz",
   "private": true,
-  "main": "./src/main.jsx",
   "scripts": {
-    "start": "yarn run dev",
-    "dev": "cross-env NODE_ENV=development webpack-dev-server --mode development",
-    "build": "cross-env NODE_ENV=production webpack --mode production",
+    "start": "node scripts/start.js",
+    "build": "node scripts/build.js",
+    "test": "node scripts/test.js",
     "emulate": "yarn run build && cordova run android"
   },
-  "devDependencies": {
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-react": "6.24.1",
-    "browser-sync": "2.26.3",
-    "browser-sync-webpack-plugin": "2.2.2",
-    "copy-webpack-plugin": "5.0.3",
-    "cross-env": "5.2.0",
-    "css-loader": "2.1.1",
-    "cssnano": "4.1.10",
-    "eslint": "5.16.0",
-    "eslint-plugin-mocha": "5.3.0",
-    "eslint-plugin-react": "7.12.4",
-    "file-loader": "3.0.1",
-    "mini-css-extract-plugin": "0.6.0",
-    "node-sass": "4.11.0",
-    "postcss-cli": "6.1.2",
-    "postcss-loader": "3.0.0",
-    "postcss-preset-env": "6.6.0",
-    "sass-loader": "7.1.0",
-    "style-loader": "0.23.1",
-    "webpack": "4.29.6",
-    "webpack-cli": "3.3.0",
-    "webpack-dev-middleware": "3.6.2",
-    "webpack-dev-server": "3.3.1",
-    "webpack-merge": "4.2.1"
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.d.ts"
+    ],
+    "setupFiles": [
+      "react-app-polyfill/jsdom"
+    ],
+    "setupFilesAfterEnv": [],
+    "testMatch": [
+      "<rootDir>/src/**/__tests__/**/*.{js,jsx,ts,tsx}",
+      "<rootDir>/src/**/*.{spec,test}.{js,jsx,ts,tsx}"
+    ],
+    "testEnvironment": "jest-environment-jsdom-fourteen",
+    "transform": {
+      "^.+\\.(js|jsx|ts|tsx)$": "<rootDir>/node_modules/babel-jest",
+      "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
+      "^(?!.*\\.(js|jsx|ts|tsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+    },
+    "transformIgnorePatterns": [
+      "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|ts|tsx)$",
+      "^.+\\.module\\.(css|sass|scss)$"
+    ],
+    "modulePaths": [],
+    "moduleNameMapper": {
+      "^react-native$": "react-native-web",
+      "^.+\\.module\\.(css|sass|scss)$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "web.js",
+      "js",
+      "web.ts",
+      "ts",
+      "web.tsx",
+      "tsx",
+      "json",
+      "web.jsx",
+      "jsx",
+      "node"
+    ],
+    "watchPlugins": [
+      "jest-watch-typeahead/filename",
+      "jest-watch-typeahead/testname"
+    ]
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   },
   "dependencies": {
+    "@babel/core": "7.4.3",
     "@fortawesome/fontawesome-svg-core": "1.2.18",
     "@fortawesome/free-solid-svg-icons": "5.8.2",
     "@fortawesome/react-fontawesome": "0.1.4",
@@ -58,7 +94,17 @@
     "@ionic-native/screen-orientation": "5.4.0",
     "@ionic-native/splash-screen": "5.4.0",
     "@ionic-native/status-bar": "5.4.0",
+    "@svgr/webpack": "4.1.0",
+    "@typescript-eslint/eslint-plugin": "1.6.0",
+    "@typescript-eslint/parser": "1.6.0",
     "@uifabric/merge-styles": "^6.17.4",
+    "babel-eslint": "10.0.1",
+    "babel-jest": "24.8.0",
+    "babel-loader": "8.0.5",
+    "babel-plugin-named-asset-import": "0.3.2",
+    "babel-preset-react-app": "9.0.0",
+    "camelcase": "5.2.0",
+    "case-sensitive-paths-webpack-plugin": "2.2.0",
     "cordova-android": "8.0.0",
     "cordova-plugin-device": "2.0.2",
     "cordova-plugin-dialogs": "2.0.1",
@@ -68,13 +114,53 @@
     "cordova-plugin-splashscreen": "5.0.2",
     "cordova-plugin-statusbar": "2.4.2",
     "cordova-plugin-whitelist": "1.3.3",
-    "es6-promise-plugin": "4.2.2",
-    "framework7": "4.2.2",
+    "css-loader": "2.1.1",
+    "dotenv-expand": "4.2.0",
+    "dotenv": "6.2.0",
+    "eslint-config-react-app": "4.0.1",
+    "eslint-loader": "2.1.2",
+    "eslint-plugin-flowtype": "2.50.1",
+    "eslint-plugin-import": "2.16.0",
+    "eslint-plugin-jsx-a11y": "6.2.1",
+    "eslint-plugin-react-hooks": "1.5.0",
+    "eslint-plugin-react": "7.12.4",
+    "eslint": "5.16.0",
+    "file-loader": "3.0.1",
     "framework7-react": "4.2.2",
+    "framework7": "4.2.2",
+    "fs-extra": "7.0.1",
+    "html-webpack-plugin": "4.0.0-beta.5",
+    "identity-obj-proxy": "3.0.0",
+    "is-wsl": "1.1.0",
+    "jest-environment-jsdom-fourteen": "0.1.0",
+    "jest-resolve": "24.7.1",
+    "jest-watch-typeahead": "0.3.0",
+    "jest": "24.7.1",
+    "mini-css-extract-plugin": "0.5.0",
+    "optimize-css-assets-webpack-plugin": "5.0.1",
+    "pnp-webpack-plugin": "1.2.1",
+    "postcss-flexbugs-fixes": "4.1.0",
+    "postcss-loader": "3.0.0",
+    "postcss-normalize": "7.0.1",
+    "postcss-preset-env": "6.6.0",
+    "postcss-safe-parser": "4.0.1",
     "prop-types": "15.7.2",
-    "react": "16.8.6",
+    "react-app-polyfill": "1.0.1",
+    "react-dev-utils": "9.0.1",
     "react-dom": "16.8.6",
-    "react-social-login-buttons": "2.3.1"
+    "react-social-login-buttons": "2.3.1",
+    "react": "16.8.6",
+    "resolve": "1.10.0",
+    "sass-loader": "7.1.0",
+    "semver": "6.0.0",
+    "style-loader": "0.23.1",
+    "terser-webpack-plugin": "1.2.3",
+    "ts-pnp": "1.1.2",
+    "url-loader": "1.1.2",
+    "webpack-dev-server": "3.2.1",
+    "webpack-manifest-plugin": "2.0.4",
+    "webpack": "4.29.6",
+    "workbox-webpack-plugin": "4.2.0"
   },
   "cordova": {
     "plugins": {

@@ -282,7 +282,7 @@ class Platform {
    * @param {function} callback the callback to trigger when this event occurs
    */
   onHardwareBackButton(fn) {
-    this.ready(e => {
+    this.ready(() => {
       document.addEventListener("backbutton", fn, false);
     });
   }
@@ -293,7 +293,7 @@ class Platform {
    * @param {function} callback The listener function that was originally bound.
    */
   offHardwareBackButton(fn) {
-    this.ready(e => {
+    this.ready(() => {
       document.removeEventListener("backbutton", fn);
     });
   }
@@ -304,7 +304,7 @@ class Platform {
    * @name Platform#exitApp
    */
   exitApp() {
-    this.ready(e => {
+    this.ready(() => {
       navigator.app && navigator.app.exitApp && navigator.app.exitApp();
     });
   }

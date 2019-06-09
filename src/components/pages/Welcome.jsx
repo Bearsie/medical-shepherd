@@ -6,13 +6,15 @@ import * as config from '../../config';
 import Platform from '../../services/Platform';
 import { colorSecondary } from '../../styles';
 import { routePath } from '../../routes';
+import welcomeImage from '../../assets/img/welcoming-shepherd.jpg';
 
 const styles = mergeStyleSets({
   navbar: {
     '--f7-navbar-bg-color': 'transparent',
   },
   page: {
-    background: 'no-repeat url(img/welcoming-shepherd.jpg)',
+    backgroundImage: `url(${welcomeImage})`,
+    backgroundRepeat: 'no-repeat',
     backgroundSize: 'cover',
   },
   title: {
