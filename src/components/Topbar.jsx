@@ -11,9 +11,9 @@ const titleStyles = mergeStyles({
   right: '24px',
 });
 
-export const Topbar = ({ iconName = faChevronLeft, backLink = '/', title ='', panelOpen, panelClose }) => (
+export const Topbar = ({ iconName = faChevronLeft, backLink = '/', title ='', panelOpen, panelClose, popupClose }) => (
   <Navbar noShadow noHairline>
-    <Link href={backLink} panelOpen={panelOpen} panelClose={panelClose}>
+    <Link href={backLink} panelOpen={panelOpen} panelClose={panelClose} popupClose={popupClose}>
         <FontAwesomeIcon icon={iconName} />
     </Link>
     <NavTitle className={titleStyles}>{title}</NavTitle>
@@ -21,9 +21,11 @@ export const Topbar = ({ iconName = faChevronLeft, backLink = '/', title ='', pa
 );
 
 Topbar.propTypes = {
+  children: PropTypes.object,
   iconName: PropTypes.object,
   backLink: PropTypes.string,
   title: PropTypes.string,
   panelOpen: PropTypes.string,
   panelClose: PropTypes.string,
+  popupClose: PropTypes.boolean,
 };
