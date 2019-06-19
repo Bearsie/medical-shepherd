@@ -1,4 +1,5 @@
 import app from 'firebase/app';
+import 'firebase/auth';
 
 
 const firebaseConfig = {
@@ -15,7 +16,20 @@ const firebaseConfig = {
 class Firebase {
     constructor() {
         app.initializeApp(firebaseConfig);
+        this.auth = app.auth();
     }
+
+    //Authentication API
+    createUserWithEmail = (email,password) => this.auth.createUserWithEmailAndPassword(email,password);
+
+    logInWithEmail = (email,password) => this.auth.signInWithEmailAndPassword(email,password);
+
+    logOut = () => this.auth.signOut();
+
+    passwordReset = (email) => this.auth.sendPasswordResetEmail(email);
+
+    passwordUpdate = (password) => this.auth.currentUser.updatePassword(password);
+
 }
 
 
