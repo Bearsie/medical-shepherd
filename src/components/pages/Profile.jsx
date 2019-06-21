@@ -1,4 +1,4 @@
-import { Page, Button, Col } from 'framework7-react';
+import { Page, Block, Button, Col, List, ListItem, ListItemCell, BlockTitle, Range} from 'framework7-react';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
@@ -16,59 +16,112 @@ import { mergeStyles } from '@uifabric/merge-styles';
   const Save = () => {
     props.f7router.navigate(routePath.Home);
   }
- 
 
-  return (
+  const [age, setAge] = React.useState(18);
+  const [weight, setWeight] = React.useState(30);
+  const [height, setHeight] = React.useState(130);
+  const [sex,setSex] = React.useState("Male");
+  const [place,setPlace] = React.useState("Europe");
+
+ /* const handleChange = (event) => {
+    setSex(event.target.value);
+  }*/
+
+  const handleChange = (setState) => (event) => { setState(event.target.value); }
+
+
+return (
     <Page>
       <Topbar title="Profile" />
       <Col className={mergeStyles({ textAlign: '-webkit-center'})}>
 
-
-  <div className={mergeStyles({ width: '250px', height: '150px' })}>
-  <div className="item-title">Age</div>
-      <div className="block block-strong">
-       <div className="range-slider range-slider-init" data-label="true" data-value-left="18" data-value-right="122" >
-  <input type="range" min="18" max="122" step="1" value="10" />
-       </div>
-      </div>
-      </div>
+       
+    <div className={mergeStyles({ width: '300px', height: '100px' })}>
+      <BlockTitle className="display-flex justify-content-space-between"><b>Age: {age}</b></BlockTitle>
+        <List simpleList>
+          <ListItem>
+            <ListItemCell className="width-auto flex-shrink-0">
+            </ListItemCell>
+            <ListItemCell className="flex-shrink-3">
+              <Range
+                min={18}
+                max={122}
+                step={1}
+                value={age}
+                label={true}
+                color="blue"
+                onRangeChange={setAge.bind(this)}
+              ></Range>
+            </ListItemCell>
+          </ListItem>
+        </List>
+    </div>
       
-      <div className={mergeStyles({ width: '100px', height: '150px' })}>
-      <div className="item-content item-input"></div>
-        <div className="item-inner">
-        <div className="item-title item-label">Sex</div>
-        <div className="block block-strong">
-          <div className="item-input-wrap input-dropdown-wrap">
-            <select name="gender">
-              <option value="male" >Male</option>
-              <option value="female">Female</option>
-            </select>
-          </div>
-          </div>
-      </div>
-      </div>
+  <div className={mergeStyles({ width: '300px', height: '70px' })}>
+    <List>
+      <ListItem
+        title="Sex"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="sex" defaultValue="Male" value = {sex} onChange={handleChange(setSex)}>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-      <div className={mergeStyles({ width: '250px', height: '250px' })}>
-      <div className="block-title">Weight(kg)</div>
-      <div className="block block-strong">
-       <div className="range-slider range-slider-init" data-label="true" data-value-left="30" data-value-right="200" >
-  <input type="range" min="30" max="200" step="1" value="10" />
-       </div>
-      </div>
+    <div className={mergeStyles({ width: '300px', height: '100px' })}>
+      <BlockTitle className="display-flex justify-content-space-between"><b>Weight(kg): {weight}</b></BlockTitle>
+        <List simpleList>
+          <ListItem>
+            <ListItemCell className="width-auto flex-shrink-0">
+            </ListItemCell>
+            <ListItemCell className="flex-shrink-3">
+              <Range
+                min={30}
+                max={200}
+                step={1}
+                value={weight}
+                label={true}
+                color="blue"
+                onRangeChange={setWeight.bind(this)}
+              ></Range>
+            </ListItemCell>
+          </ListItem>
+        </List>
+    </div>
 
-      <div className="block-title">Height(cm)</div>
-      <div className="block block-strong">
-       <div className="range-slider range-slider-init" data-label="true" data-value-left="130" data-value-right="220" >
-  <input type="range" min="130" max="220" step="1" value="10" />
-       </div>
-      </div>
+    <div className={mergeStyles({ width: '300px', height: '100px' })}>
+      <BlockTitle className="display-flex justify-content-space-between"><b>Height(cm): {height}</b></BlockTitle>
+        <List simpleList>
+          <ListItem>
+            <ListItemCell className="width-auto flex-shrink-0">
+            </ListItemCell>
+            <ListItemCell className="flex-shrink-3">
+              <Range
+                min={130}
+                max={220}
+                step={1}
+                value={height}
+                label={true}
+                color="blue"
+                onRangeChange={setHeight.bind(this)}
+              ></Range>
+            </ListItemCell>
+          </ListItem>
+        </List>
+    </div>
 
-        <div className="item-content item-input"></div>
-        <div className="item-inner">
-        <div className="item-title item-label">Place of Residence</div>
-        <div className="block block-strong">
-          <div className="item-input-wrap input-dropdown-wrap">
-            <select placeholder="Please choose...">
+      <div className={mergeStyles({ width: '300px', height: '70px' })}>
+    <List>
+      <ListItem
+        title="Place of Residence"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="placeOfResidence" defaultValue="Europe" value = {place} onChange={handleChange(setPlace)}>
               <option value="United States or Canada">United States or Canada</option>
               <option value="Latin or South America">Latin or South America</option>
               <option value="Europe">Europe</option>
@@ -78,212 +131,235 @@ import { mergeStyles } from '@uifabric/merge-styles';
               <option value="Australia and Oceania">Australia and Oceania</option>
               <option value="Russia, Kazakhstan or Mongolia">Russia, Kazakhstan or Mongolia</option>
               <option value="Southwestern Asia">Southwestern Asia</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
+  Place: {place}
 
-            </select>
-          
-          </div>
-          </div>
-          </div>
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="High Cholesterol"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="High Cholesterol" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">High Cholesterol</div>
-      </div>
-  </a>
-</div>
-</li>
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Diabetes"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Diabetes" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">High Cholesterol</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Hypertension"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Hypertension" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">High Cholesterol</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Smoking"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Smoking" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Diabetes</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Frequent alcohol consumption"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Frequent alcohol consumption" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Hypertension</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Coronary disease"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Coronary disease" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Smoking</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Contact lenses"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Contact lenses" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Frequent alcohol consumption</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Chronic obstructive pulmonary disease"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Chronic obstructive pulmonary disease" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Coronary disease</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Asthma"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Asthma" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Contact lenses</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Atherosclerosis"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Atherosclerosis" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Chronic obstructive pulmonary disease</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Aortic aneurysm"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Aortic aneurysm" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Asthma</div>
-      </div>
-  </a>
-</div>
-</li> 
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Peripheral vascular disease"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Peripheral vascular disease" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
 
-<li>
-<div className="item-input-wrap input-dropdown-wrap">
-  <a className="smart-select smart-select-init">
-    <select name="High Cholesterol">
-      <option value="unknown" selected>Unknown</option>
-      <option value="yes">Yes</option>
-      <option value="pear">No</option>
-    </select>
-      <div className="item-inner">
-        <div className="item-title">Atherosclerosis</div>
-      </div>
-  </a>
-</div>
-</li> 
-  
-  <Button
-            fill
+  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+    <List>
+      <ListItem
+        title="Hemophilia"
+        smartSelect
+        smartSelectParams={{openIn: 'sheet'}}
+      >
+        <select name="Hemophilia" defaultValue="unknown">
+          <option value="yes">Yes</option>
+          <option value="no">No</option>
+          <option value="unknown">Unknown</option>
+        </select>
+      </ListItem>
+    </List>
+  </div>
+
+      <Block> 
+        <Button
+            large fill
             onClick={Save}
-            className={mergeStyles({ width: '50%'})}
+            
           >
             Apply
-          </Button>
-
-      </div>
-      
-      </Col>
+        </Button>
+      </Block>  
+     
+     </Col>
       </Page>
-
-
+      
 )
  };
-
-
-
 
 Profile.propTypes = {
   f7router: PropTypes.object,
