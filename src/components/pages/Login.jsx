@@ -5,6 +5,7 @@ import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-butto
 import { routePath } from '../../routes';
 import { Divider } from "../Divider";
 import { Topbar } from '../Topbar';
+import { FirebaseContext } from '../Firebase';
 
 const socialMediaButtonStyles = {
   height: '48px',
@@ -17,9 +18,15 @@ export const Login = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const signIn = () => {
-    props.f7router.app.dialog.alert(`Username: ${userName}<br>Password: ${password}`, () => {
-      props.f7router.navigate(routePath.Home);
+  const signIn = (fire) => {
+    fire.firebase
+    .logInWithEmail(userName, password)
+    .then((authUser) => {
+        props.f7router.navigate(routePath.Home);
+    })
+    .catch((error) => {
+      props.f7router.app.dialog.alert(`Something went wrong! Try Again!`, () => {
+      });
     });
   };
   
@@ -31,7 +38,8 @@ export const Login = (props) => {
         Great to have you here with us!<br />
         Drop by every time you want.
       </Block>
-      <List form>
+      <FirebaseContext.Consumer>
+      {firebase => <List form>
         <ListInput
           floatingLabel
           label="E-mail"
@@ -52,19 +60,19 @@ export const Login = (props) => {
             setPassword(e.target.value);
           }}
         />
-      </List>
       <Block>
-        <List>
-          <Button large fill onClick={signIn}>Log in</Button>
+          <Button large fill onClick={() => signIn({firebase})}>Log in</Button>
           <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
           <GoogleLoginButton onClick={signIn} style={socialMediaButtonStyles} />
           <FacebookLoginButton onClick={signIn} style={socialMediaButtonStyles} />
-        </List>
       </Block>
+      </List>}
+    </FirebaseContext.Consumer>
     </Page>
   );
 }
 
 Login.propTypes = {
   f7router: PropTypes.object,
+  firebase: PropTypes.object,
 };
