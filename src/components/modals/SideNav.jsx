@@ -10,7 +10,7 @@ import { Topbar } from '../Topbar';
 
 const mainMenuItems = [
   { title: 'Profile', path: routePath.Profile, Icon: Head },
-  { title: 'Diagnosis', path: routePath.Diagnosis, Icon: Search },
+  { title: 'Diagnosis', path: routePath.Symptoms, Icon: Search },
   { title: 'Prescriptions', path: routePath.Prescriptions, Icon: Pills },
   { title: 'Appointments', path: routePath.Appointments, Icon: Doctor },
   { title: 'History of diseases', path: routePath.History, Icon: Files },

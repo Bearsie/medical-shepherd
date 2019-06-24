@@ -33,4 +33,5 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 .env
-src/api/mockedResponses
+src/api/mockedResponses/*
+!src/api/mockedResponses/profileData.js
