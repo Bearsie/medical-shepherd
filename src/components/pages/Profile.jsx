@@ -22,10 +22,20 @@ import { mergeStyles } from '@uifabric/merge-styles';
   const [height, setHeight] = React.useState(130);
   const [sex,setSex] = React.useState("Male");
   const [place,setPlace] = React.useState("Europe");
-
- /* const handleChange = (event) => {
-    setSex(event.target.value);
-  }*/
+  const [diabetes,setDiabetesChoice] = React.useState("unknown");
+  const [hypertension,setHypertensionChoice] = React.useState("unknown");
+  const [cholesterol,setCholesterolChoice] = React.useState("unknown");
+  const [smoking,setSmokingChoice] = React.useState("unknown");
+  const [alcohol,setAlcoholChoice] = React.useState("unknown");
+  const [coronary,setCoronaryChoice] = React.useState("unknown");
+  const [lenses,setLensesChoice] = React.useState("unknown");
+  const [pulmonary,setPulmonaryChoice] = React.useState("unknown");
+  const [asthma,setAsthmaChoice] = React.useState("unknown");
+  const [atherosclerosis,setAtherosclerosisChoice] = React.useState("unknown");
+  const [aneurysm,setAneurysmChoice] = React.useState("unknown");
+  const [vascular,setVascularChoice] = React.useState("unknown");
+  const [hemophilia,setHemophiliaChoice] = React.useState("unknown");
+ 
 
   const handleChange = (setState) => (event) => { setState(event.target.value); }
 
@@ -143,7 +153,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="High Cholesterol" defaultValue="unknown">
+        <select name="High Cholesterol" defaultValue="unknown" value = {cholesterol} onChange={handleChange(setCholesterolChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -159,7 +169,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Diabetes" defaultValue="unknown">
+        <select name="Diabetes" defaultValue="unknown" value = {diabetes} onChange={handleChange(setDiabetesChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -175,7 +185,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Hypertension" defaultValue="unknown">
+        <select name="Hypertension" defaultValue="unknown" value = {hypertension} onChange={handleChange(setHypertensionChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -191,7 +201,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Smoking" defaultValue="unknown">
+        <select name="Smoking" defaultValue="unknown" value = {smoking} onChange={handleChange(setSmokingChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -207,7 +217,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Frequent alcohol consumption" defaultValue="unknown">
+        <select name="Frequent alcohol consumption" defaultValue="unknown" value = {alcohol} onChange={handleChange(setAlcoholChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -223,7 +233,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Coronary disease" defaultValue="unknown">
+        <select name="Coronary disease" defaultValue="unknown" value = {coronary} onChange={handleChange(setCoronaryChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -239,7 +249,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Contact lenses" defaultValue="unknown">
+        <select name="Contact lenses" defaultValue="unknown" value = {lenses} onChange={handleChange(setLensesChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -255,7 +265,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Obstructive pulmonary disease" defaultValue="unknown">
+        <select name="Obstructive pulmonary disease" defaultValue="unknown" value = {pulmonary} onChange={handleChange(setPulmonaryChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -271,7 +281,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Asthma" defaultValue="unknown">
+        <select name="Asthma" defaultValue="unknown" value = {asthma} onChange={handleChange(setAsthmaChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -287,7 +297,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Atherosclerosis" defaultValue="unknown">
+        <select name="Atherosclerosis" defaultValue="unknown" value = {atherosclerosis} onChange={handleChange(setAtherosclerosisChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -303,7 +313,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Aortic aneurysm" defaultValue="unknown">
+        <select name="Aortic aneurysm" defaultValue="unknown" value = {aneurysm} onChange={handleChange(setAneurysmChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -319,7 +329,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Peripheral vascular disease" defaultValue="unknown">
+        <select name="Peripheral vascular disease" defaultValue="unknown" value = {vascular} onChange={handleChange(setVascularChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -335,7 +345,7 @@ return (
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Hemophilia" defaultValue="unknown">
+        <select name="Hemophilia" defaultValue="unknown" value = {hemophilia} onChange={handleChange(setHemophiliaChoice)}>
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -356,7 +366,6 @@ return (
      
      </Col>
       </Page>
-      
 )
  };
 
