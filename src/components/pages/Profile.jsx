@@ -114,7 +114,7 @@ return (
         </List>
     </div>
 
-      <div className={mergeStyles({ width: '300px', height: '70px' })}>
+      <div className={mergeStyles({ width: '400px', height: '70px' })}>
     <List>
       <ListItem
         title="Place of Residence"
@@ -135,9 +135,8 @@ return (
       </ListItem>
     </List>
   </div>
-  Place: {place}
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="High Cholesterol"
@@ -153,7 +152,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Diabetes"
@@ -169,7 +168,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Hypertension"
@@ -185,7 +184,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Smoking"
@@ -201,7 +200,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Frequent alcohol consumption"
@@ -217,7 +216,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Coronary disease"
@@ -233,7 +232,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Contact lenses"
@@ -249,14 +248,14 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
-        title="Chronic obstructive pulmonary disease"
+        title="Obstructive pulmonary disease"
         smartSelect
         smartSelectParams={{openIn: 'sheet'}}
       >
-        <select name="Chronic obstructive pulmonary disease" defaultValue="unknown">
+        <select name="Obstructive pulmonary disease" defaultValue="unknown">
           <option value="yes">Yes</option>
           <option value="no">No</option>
           <option value="unknown">Unknown</option>
@@ -265,7 +264,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Asthma"
@@ -281,7 +280,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Atherosclerosis"
@@ -297,7 +296,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Aortic aneurysm"
@@ -313,7 +312,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Peripheral vascular disease"
@@ -329,7 +328,7 @@ return (
     </List>
   </div>
 
-  <div className={mergeStyles({ width: '300px', height: '20px' })}>
+  <div className={mergeStyles({ width: '400px', height: '20px' })}>
     <List>
       <ListItem
         title="Hemophilia"
