@@ -1,4 +1,4 @@
-export const profileData = {
+export default {
     sex: 'female',
     age: 22,
     weight: 55,
