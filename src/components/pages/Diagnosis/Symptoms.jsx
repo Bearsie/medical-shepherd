@@ -13,7 +13,7 @@ import { PopupSelect } from '../../PopupSelect';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
 
-import mockedProfileData from '../../../api/mockedResponses';
+import mockedProfileData from '../../../api/mockedResponses/profileData';
 
 export const Symptoms = (props) => {
   const [symptoms, setSymptoms] = useState([]);
