@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
     Licence: Creative Commons (Attribution 3.0 Unported) https://creativecommons.org/licenses/by/3.0/ 
 */
 
-export const Microscop = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954', ...props }) => (
+export const Microscope = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954', ...props }) => (
   <svg width={512} height={512} viewBox="0 0 512 512" {...props}>
     <title>{'background'}</title>
     <path fill="none" d="M-1-1h582v402H-1z" />
@@ -40,7 +40,7 @@ export const Microscop = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954'
   </svg>
 );
 
-Microscop.propTypes = {
+Microscope.propTypes = {
   colorPrimary: PropTypes.string,
   colorSecondary: PropTypes.string,
 };

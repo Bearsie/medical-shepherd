@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
     Licence: Creative Commons (Attribution 3.0 Unported) https://creativecommons.org/licenses/by/3.0/ 
 */
 
-export const Something08 = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954', ...props }) => (
+export const Medicine = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954', ...props }) => (
   <svg width={512} height={512} viewBox="0 0 512 512" {...props}>
     <title>{'background'}</title>
     <path fill="none" d="M-1-1h582v402H-1z" />
@@ -30,7 +30,7 @@ export const Something08 = ({ colorPrimary = '#16ade1', colorSecondary = '#1b395
   </svg>
 );
 
-Something08.propTypes = {
+Medicine.propTypes = {
   colorPrimary: PropTypes.string,
   colorSecondary: PropTypes.string,
 };
