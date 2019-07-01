@@ -18,18 +18,22 @@ export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const register = (fire) => {
-    fire.firebase
+  const register = (firebase) => {
+    firebase
       .createUserWithEmail(userName, password)
       .then((authUser) => {
         props.f7router.app.dialog.alert(`Registration successful!`, () => {
-          props.f7router.navigate(routePath.Login);
+          props.f7router.navigate(routePath.Home);
         });
       })
       .catch((error) => {
-        props.f7router.app.dialog.alert(`Try again later!`, () => {
+        props.f7router.app.dialog.alert(error.message, () => {
+          console.log(error)
         });
       });
+  };
+
+  const registerSocial = () => {
   };
 
   return (
@@ -63,10 +67,10 @@ export const Register = (props) => {
           }}
         />
         <Block>
-          <Button large fill onClick={() => register({firebase})}>Sign up</Button>
+          <Button large fill onClick={() => register(firebase)}>Sign up</Button>
           <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-          <GoogleLoginButton text="Sign up with google" onClick={register} style={socialMediaButtonStyles} />
-          <FacebookLoginButton text="SIgn up with facebook" onClick={register} style={socialMediaButtonStyles} />
+          <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
+          <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
         </Block>
       </List>}
     </FirebaseContext.Consumer>

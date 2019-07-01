@@ -18,8 +18,13 @@ const mainMenuItems = [
 ];
 
 
-const handleLogOut = (fire) => {
-  fire.firebase.logOut()
+const handleLogOut = (firebase) => {
+  Dialogs.confirm('Do you want to log out?', config.name).then((answerIndex) => {
+    if (answerIndex === 1) {
+      firebase.logOut()
+      Platform.exitApp()
+    }
+  });
 };
 
 export const SideNav = () => {
@@ -40,7 +45,7 @@ export const SideNav = () => {
             <Alarm className={svgIcons} slot="media" />
             <Toggle slot="after" checked={checked} />
           </ListItem>
-          <ListItem key={routePath.Welcome} link={routePath.Welcome} title="Log out" onClick={() => handleLogOut({firebase})} noChevron panelClose="left">
+          <ListItem key={routePath.Welcome} link={routePath.Welcome} title="Log out" onClick={() => handleLogOut(firebase)} noChevron panelClose="left">
             <Crutches className={svgIcons} slot="media" />
           </ListItem>
         </List>}

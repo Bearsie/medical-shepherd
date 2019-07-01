@@ -17,10 +17,8 @@ import "./styles/styles.css";
 // Import main App component
 import { App } from './components/App';
 
-import Firebase, { FirebaseContext } from './components/Firebase';
-
 // Init Framework7-React plugin
 Framework7.use(Framework7React);
 
 // Mount React App
-render(<FirebaseContext.Provider value={new Firebase()}><App /></FirebaseContext.Provider>, document.getElementById('app'));
+render(<App />, document.getElementById('app'));

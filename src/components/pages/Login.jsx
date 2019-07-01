@@ -18,16 +18,19 @@ export const Login = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const signIn = (fire) => {
-    fire.firebase
+  const signIn = (firebase) => {
+    firebase
     .logInWithEmail(userName, password)
     .then((authUser) => {
         props.f7router.navigate(routePath.Home);
     })
     .catch((error) => {
-      props.f7router.app.dialog.alert(`Something went wrong! Try Again!`, () => {
+      props.f7router.app.dialog.alert(error.message, () => {
+        console.log(error)
       });
     });
+  };
+  const signInSocial = () => {
   };
   
   return (
@@ -61,10 +64,10 @@ export const Login = (props) => {
           }}
         />
       <Block>
-          <Button large fill onClick={() => signIn({firebase})}>Log in</Button>
+          <Button large fill onClick={() => signIn(firebase)}>Log in</Button>
           <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-          <GoogleLoginButton onClick={signIn} style={socialMediaButtonStyles} />
-          <FacebookLoginButton onClick={signIn} style={socialMediaButtonStyles} />
+          <GoogleLoginButton onClick={signInSocial} style={socialMediaButtonStyles} />
+          <FacebookLoginButton onClick={signInSocial} style={socialMediaButtonStyles} />
       </Block>
       </List>}
     </FirebaseContext.Consumer>

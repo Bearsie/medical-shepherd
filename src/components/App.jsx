@@ -7,6 +7,7 @@ import * as config from '../config';
 import routes, { routePath } from '../routes';
 import Platform from '../services/Platform';
 import { SideNav } from './modals/SideNav';
+import Firebase, { FirebaseContext } from './Firebase';
 
 const f7params = {
   id: config.appId,
@@ -41,10 +42,12 @@ export const App = () => {
   }, []);
 
   return (
-    <AppRoot params={f7params} routes={routes}>
-      <Statusbar />
-      <SideNav />
-      <View url={routePath.Welcome} main id="main-view" />
-    </AppRoot>
+    <FirebaseContext.Provider value={new Firebase()}>
+      <AppRoot params={f7params} routes={routes}>
+        <Statusbar />
+        <SideNav />
+        <View url={routePath.Welcome} main id="main-view" />
+      </AppRoot>
+    </FirebaseContext.Provider>
   );
 };
