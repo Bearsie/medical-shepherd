@@ -35,7 +35,7 @@ export const Login = (props) => {
   
   return (
     <Page noToolbar noNavbar noSwipeback loginScreen>
-      <Topbar backLink={routePath.Welcome} />
+      <Topbar />
       <LoginScreenTitle className="no-margin">Log in</LoginScreenTitle>
       <Block className="text-align-center">
         Great to have you here with us!<br />

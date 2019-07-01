@@ -38,7 +38,7 @@ export const Register = (props) => {
 
   return (
     <Page noToolbar noNavbar noSwipeback loginScreen>
-      <Topbar backLink={routePath.Welcome} />
+      <Topbar />
       <LoginScreenTitle className="no-margin">Register</LoginScreenTitle>
       <Block className="text-align-center">
         You are one step away from better health!<br />
