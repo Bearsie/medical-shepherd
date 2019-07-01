@@ -5,6 +5,7 @@ import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-butto
 import { routePath } from '../../routes';
 import { Divider } from "../Divider";
 import { Topbar } from '../Topbar';
+import { FirebaseContext } from '../Firebase';
 
 const socialMediaButtonStyles = {
   height: '48px',
@@ -17,12 +18,24 @@ export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
 
-  const register =  () => {
-    props.f7router.app.dialog.alert(`Username: ${userName}<br>Password: ${password}`, () => {
-      props.f7router.navigate(routePath.Home);
-    });
+  const register = (firebase) => {
+    firebase
+      .createUserWithEmail(userName, password)
+      .then((authUser) => {
+        props.f7router.app.dialog.alert(`Registration successful!`, () => {
+          props.f7router.navigate(routePath.Home);
+        });
+      })
+      .catch((error) => {
+        props.f7router.app.dialog.alert(error.message, () => {
+          console.log(error)
+        });
+      });
   };
-  
+
+  const registerSocial = () => {
+  };
+
   return (
     <Page noToolbar noNavbar noSwipeback loginScreen>
       <Topbar backLink={routePath.Welcome} />
@@ -31,7 +44,8 @@ export const Register = (props) => {
         You are one step away from better health!<br />
         Go ahead.
       </Block>
-      <List form>
+      <FirebaseContext.Consumer>
+      {firebase => <List form firebase={firebase}>
         <ListInput
           floatingLabel
           label="E-mail"
@@ -52,19 +66,19 @@ export const Register = (props) => {
             setPassword(e.target.value);
           }}
         />
-      </List>
-      <Block>
-        <List>
-          <Button large fill onClick={register}>Sign up</Button>
+        <Block>
+          <Button large fill onClick={() => register(firebase)}>Sign up</Button>
           <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-          <GoogleLoginButton text="Sign up with google" onClick={register} style={socialMediaButtonStyles} />
-          <FacebookLoginButton text="SIgn up with facebook" onClick={register} style={socialMediaButtonStyles} />
-        </List>
-      </Block>
+          <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
+          <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
+        </Block>
+      </List>}
+    </FirebaseContext.Consumer>
     </Page>
   );
 };
 
 Register.propTypes = {
   f7router: PropTypes.object,
+  firebase: PropTypes.object,
 };

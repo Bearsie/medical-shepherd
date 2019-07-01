@@ -7,6 +7,7 @@ import Platform from '../../services/Platform';
 import { svgIcons } from '../../styles';
 import { Alarm, Crutches, Doctor, Files, Head, Pills, Search } from '../Icons';
 import { Topbar } from '../Topbar';
+import { FirebaseContext } from '../Firebase';
 
 const mainMenuItems = [
   { title: 'Profile', path: routePath.Profile, Icon: Head },
@@ -16,10 +17,12 @@ const mainMenuItems = [
   { title: 'History of diseases', path: routePath.History, Icon: Files },
 ];
 
-const handleLogOut = () => {
+
+const handleLogOut = (firebase) => {
   Dialogs.confirm('Do you want to log out?', config.name).then((answerIndex) => {
     if (answerIndex === 1) {
-      Platform.exitApp();
+      firebase.logOut()
+      Platform.exitApp()
     }
   });
 };
@@ -30,21 +33,23 @@ export const SideNav = () => {
   return (
     <Panel left cover>
       <Topbar panelClose="left" />
-      <List simple-list noHairlinesBetween noHairlines>
-        {mainMenuItems.map(({ Icon, path, title }) => (
-          <ListItem key={path} link={path} title={title} noChevron panelClose="left">
-            <Icon className={svgIcons} slot="media"/>
+      <FirebaseContext.Consumer>
+        {firebase => <List simple-list noHairlinesBetween noHairlines>
+          {mainMenuItems.map(({ Icon, path, title }) => (
+            <ListItem key={path} link={path} title={title} noChevron panelClose="left">
+              <Icon className={svgIcons} slot="media" />
+            </ListItem>
+          ))}
+          <ListItem />
+          <ListItem link="#" title="Notifications" onClick={() => toggleChecked(!checked)} noChevron>
+            <Alarm className={svgIcons} slot="media" />
+            <Toggle slot="after" checked={checked} />
           </ListItem>
-        ))}
-        <ListItem />
-        <ListItem link="#" title="Notifications" onClick={() => toggleChecked(!checked)} noChevron>
-          <Alarm className={svgIcons} slot="media"/>
-          <Toggle slot="after" checked={checked} />
-        </ListItem>
-        <ListItem link="#" title="Log out" onClick={handleLogOut} noChevron>
-          <Crutches className={svgIcons} slot="media"/>
-        </ListItem>
-      </List>
+          <ListItem key={routePath.Welcome} link={routePath.Welcome} title="Log out" onClick={() => handleLogOut(firebase)} noChevron panelClose="left">
+            <Crutches className={svgIcons} slot="media" />
+          </ListItem>
+        </List>}
+      </FirebaseContext.Consumer>
     </Panel>
   );
 };
