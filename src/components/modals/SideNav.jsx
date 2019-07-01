@@ -12,7 +12,7 @@ import { FirebaseContext } from '../Firebase';
 const mainMenuItems = [
   { title: 'Profile', path: routePath.Profile, Icon: Head },
   { title: 'Diagnosis', path: routePath.Symptoms, Icon: Search },
-  { title: 'Prescriptions', path: routePath.Prescriptions, Icon: Pills },
+  { title: 'Prescriptions', path: routePath.PrescriptionList, Icon: Pills },
   { title: 'Appointments', path: routePath.Appointments, Icon: Doctor },
   { title: 'History of diseases', path: routePath.History, Icon: Files },
 ];

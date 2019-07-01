@@ -4,7 +4,7 @@ import { History } from './components/pages/History';
 import { Home } from './components/pages/Home';
 import { Login } from './components/pages/Login';
 import { NotFoundPage } from './components/pages/NotFoundPage';
-import { Prescriptions } from './components/pages/Prescriptions';
+import { List, Category, AddPrescription } from './components/pages/Prescriptions';
 import { Profile } from './components/pages/Profile';
 import { Register } from './components/pages/Register';
 import { Welcome } from './components/pages/Welcome';
@@ -16,7 +16,9 @@ export const routePath = {
   History: '/history/',
   Home: '/',
   Login: '/login',
-  Prescriptions: '/prescriptions/',
+  PrescriptionAdd: '/prescriptions/add/',
+  PrescriptionList: '/prescriptions/list/',
+  PrescriptionCategory: '/prescriptions/category/',
   Profile: '/profile/',
   Register: '/register/',
   RiskFactors: '/diagnosis/risk-factors/',
@@ -39,8 +41,8 @@ export default [
     component: Profile,
   },
   {
-    path: routePath.Prescriptions,
-    component: Prescriptions,
+    path: routePath.PrescriptionList,
+    component: List,
   },
   {
     path: routePath.History,
@@ -77,6 +79,14 @@ export default [
   {
     path: routePath.DiagnosisResults,
     component: Results,
+  },
+  {
+    path: routePath.PrescriptionCategory,
+    component: Category,
+  },
+  {
+    path: routePath.PrescriptionAdd,
+    component: AddPrescription,
   },
   {
     path: '(.*)',
