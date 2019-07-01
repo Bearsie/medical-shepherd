@@ -1,5 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types';
+/* 
+    Author:	Rudez Studio
+    Licence: Creative Commons (Attribution 3.0 Unported) https://creativecommons.org/licenses/by/3.0/ 
+*/
 
 export const Something06 = ({ colorPrimary = '#16ade1', colorSecondary = '#1b3954', ...props }) => (
   <svg width={512} height={512} viewBox="0 0 512 512" {...props}>
