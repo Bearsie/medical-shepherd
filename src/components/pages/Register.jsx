@@ -21,7 +21,12 @@ export const Register = (props) => {
   const register = (firebase) => {
     firebase
       .createUserWithEmail(userName, password)
-      .then((authUser) => {
+      .then(authUser => {
+        return firebase.user(authUser.user.uid)
+        .set({
+          userName
+        });
+      }).then(() => {
         props.f7router.app.dialog.alert(`Registration successful!`, () => {
           props.f7router.navigate(routePath.Home);
         });
