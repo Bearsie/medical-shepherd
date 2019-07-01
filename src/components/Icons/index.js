@@ -1,3 +1,4 @@
+export * from './Alarm';
 export * from './AidKit';
 export * from './Ambulance';
 export * from './Bag';
@@ -46,4 +47,4 @@ export * from './Telephone';
 export * from './Thermometer';
 export * from './Tooth';
 export * from './Torch';
-export * from './Tv';
+export * from './TV';
