@@ -4,10 +4,11 @@ import React, { useState } from 'react';
 import * as config from '../../config';
 import { routePath } from '../../routes';
 import Platform from '../../services/Platform';
+import PropTypes from 'prop-types';
 import { svgIcons } from '../../styles';
 import { Alarm, Crutches, Doctor, Files, Head, Pills, Search } from '../Icons';
 import { Topbar } from '../Topbar';
-import { FirebaseContext } from '../Firebase';
+import { FirebaseConsumer } from '../Firebase';
 
 const mainMenuItems = [
   { title: 'Profile', path: routePath.Profile, Icon: Head },
@@ -18,11 +19,14 @@ const mainMenuItems = [
 ];
 
 
-const handleLogOut = (firebase) => {
+const handleLogOut = (props) => {
   Dialogs.confirm('Do you want to log out?', config.name).then((answerIndex) => {
     if (answerIndex === 1) {
-      firebase.logOut()
-      Platform.exitApp()
+        props.firebase.logOut().then(() => {
+          if(props.clearAuthUser()){
+            Platform.exitApp()
+          }
+        })
     }
   });
 };
@@ -33,8 +37,8 @@ export const SideNav = () => {
   return (
     <Panel left cover>
       <Topbar panelClose="left" />
-      <FirebaseContext.Consumer>
-        {firebase => <List simple-list noHairlinesBetween noHairlines>
+      <FirebaseConsumer>
+        {props => <List simple-list noHairlinesBetween noHairlines>
           {mainMenuItems.map(({ Icon, path, title }) => (
             <ListItem key={path} link={path} title={title} noChevron panelClose="left">
               <Icon className={svgIcons} slot="media" />
@@ -45,11 +49,16 @@ export const SideNav = () => {
             <Alarm className={svgIcons} slot="media" />
             <Toggle slot="after" checked={checked} />
           </ListItem>
-          <ListItem key={routePath.Welcome} link={routePath.Welcome} title="Log out" onClick={() => handleLogOut(firebase)} noChevron panelClose="left">
+          <ListItem key={routePath.Welcome} link={routePath.Welcome} title="Log out" onClick={() => handleLogOut(props)} noChevron panelClose="left">
             <Crutches className={svgIcons} slot="media" />
           </ListItem>
         </List>}
-      </FirebaseContext.Consumer>
+      </FirebaseConsumer>
     </Panel>
   );
+};
+
+
+SideNav.propTypes = {
+  props: PropTypes.object,
 };
