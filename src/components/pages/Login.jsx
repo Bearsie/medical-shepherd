@@ -45,7 +45,7 @@ export const Login = (props) => {
         Drop by every time you want.
       </Block>
       <FirebaseConsumer>
-        {props => <List form>
+        {fireProps => <List form>
           <ListInput
             floatingLabel
             label="E-mail"
@@ -67,7 +67,7 @@ export const Login = (props) => {
             }}
           />
           <Block>
-              <Button large fill onClick={() => signIn(props)}>Log in</Button>
+              <Button large fill onClick={() => signIn(fireProps)}>Log in</Button>
             <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
             <GoogleLoginButton onClick={signInSocial} style={socialMediaButtonStyles} />
             <FacebookLoginButton onClick={signInSocial} style={socialMediaButtonStyles} />
@@ -80,5 +80,5 @@ export const Login = (props) => {
 
 Login.propTypes = {
   f7router: PropTypes.object,
-  props: PropTypes.object,
+  fireProps: PropTypes.object,
 };

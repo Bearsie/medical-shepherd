@@ -48,7 +48,7 @@ export const Register = (props) => {
         Go ahead.
       </Block>
       <FirebaseConsumer>
-        {props => <List form>
+        {fireProps => <List form>
           <ListInput
             floatingLabel
             label="E-mail"
@@ -70,7 +70,7 @@ export const Register = (props) => {
             }}
           />
           <Block>
-            <Button large fill onClick={() => register(props)}>Sign up</Button>
+            <Button large fill onClick={() => register(fireProps)}>Sign up</Button>
             <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
             <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
             <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
@@ -83,5 +83,5 @@ export const Register = (props) => {
 
 Register.propTypes = {
   f7router: PropTypes.object,
-  props: PropTypes.object,
+  fireProps: PropTypes.object,
 };
