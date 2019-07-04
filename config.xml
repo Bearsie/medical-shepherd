@@ -35,6 +35,15 @@
   <preference name="AndroidExtraFilesystems" value="files,cache, sdcard, cache-external, files-external" />
   <platform name="android">
     <allow-intent href="market:*" />
+    <edit-config target="NSCameraUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Access to camera is needed to take pictures</string>
+    </edit-config>
+    <edit-config target="NSLocationWhenInUseUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Need location access to find things nearby</string>
+    </edit-config>
+    <edit-config target="NSPhotoLibraryAddUsageDescription" file="*-Info.plist" mode="merge">
+      <string>Need photo library access to save pictures there</string>
+    </edit-config>
     <icon density="ldpi" src="resources/android/drawable-ldpi/icon.png" />
     <icon density="mdpi" src="resources/android/drawable-mdpi/icon.png" />
     <icon density="hdpi" src="resources/android/drawable-hdpi/icon.png" />

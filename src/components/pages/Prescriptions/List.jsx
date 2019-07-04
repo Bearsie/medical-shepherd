@@ -15,7 +15,7 @@ const mockedPrescriptions = [
     date: 1561492575569,
     category: 'Psychiatry',
     title: 'dr John Doe',
-
+    src: 'tesktjakiś',
   },
   {
     date: 1561499667349,
