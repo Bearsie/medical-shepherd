@@ -4,10 +4,10 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { routePath } from '../../routes';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
-import { Topbar } from '../Topbar';
+import { useEventValue, useValue } from '../hooks';
 import { RadioSelect } from '../RadioSelect';
 import { RangeSelect } from '../RangeSelect';
-import { useSelectValue } from '../hooks';
+import { Topbar } from '../Topbar';
 import { db, FirebaseContext } from '../Firebase';
 
 const commonRisks = [
@@ -72,14 +72,14 @@ export const Profile = (props) => {
   const docProfileData = db.collection(firebase.authUserId).doc('profileData');
   const docRisks = db.collection(firebase.authUserId).doc('risks');
 
-  const age = useSelectValue(53);
-  const weight = useSelectValue(95);
-  const height = useSelectValue(180);
-  const sex = useSelectValue('Male');
-  const place = useSelectValue('Europe');
+  const age = useValue(52);
+  const weight = useValue(95);
+  const height = useValue(180);
+  const sex = useEventValue('Male');
+  const place = useEventValue('Europe');
   const risks = reduce(commonRisks, (currentRisks, risk) => ({
     ...currentRisks,
-    [risk]: useSelectValue('Unknown'),
+    [risk]: useEventValue('Unknown'),
   }), {});
 
   return (

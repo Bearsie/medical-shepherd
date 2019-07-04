@@ -4,7 +4,7 @@ import { Block, BlockTitle, Button, List, Page } from 'framework7-react';
 import { get, isEmpty, keyBy, map, values } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getDiagnosis } from '../../../../api/api';
+import { getDiagnosis } from '../../../../api';
 import { routePath } from '../../../../routes';
 import RegisterBackButtonAction from '../../../../services/RegisterBackButtonAction';
 import { InterviewCard } from '../../../Icons';

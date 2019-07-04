@@ -1,8 +1,9 @@
-import { Block, Button, Page, PageContent } from 'framework7-react';
+import { mergeStyles } from '@uifabric/merge-styles';
+import { Block, Button, ListInput, Page, PageContent, List } from 'framework7-react';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { useSelectValue } from '../../hooks';
+import { useEventValue } from '../../hooks';
 import { RadioSelect } from '../../RadioSelect';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
@@ -39,81 +40,88 @@ const categories = [
 ];
 
 export const AddPrescription = (props) => {
-  const prescritionCategory = useSelectValue('Other');
-  const [newPrescription, setNewPrescription] = useState(undefined);
+  const category = useEventValue('Other');
+  const [title, setTitle] = useState('');
+  const [image, setImage] = useState(undefined);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
   }, []);
 
   const handleSaveChanges = () => {
+    const newPrescription = {
+      category,
+      title,
+      ...image,
+    };
     //saveToFirebase([...props.prescriptions, newPrescription]);
   };
 
-  const takePicture = (category) => {
-    if (!window.cordova) return;
+  const onError = (error) => {
+    props.f7router.app.dialog.alert('An error occured: ', error.message);
+  };
+
+  const takePicture = () => new Promise((resolve) => {
+    if (!window.cordova) resolve(undefined);
 
     navigator.camera.getPicture(
-      (imageURI) => {
-        setNewPrescription({
-          category,
-          imageURI,
-          date: Date.now(),
-        });
-      },
+      (imageData) => resolve(imageData),
       (error) => {
-        props.f7router.app.dialog.alert(error.message);
+        onError(error);
+        return resolve(null);
       },
       {
         quality: 80,
-        destinationType: Camera.DestinationType.FILE_URI,
-        sourceType: Camera.PictureSourceType.CAMERA,
-        mediaType: Camera.MediaType.PICTURE,
+        destinationType: Camera.DestinationType.DATA_URL,
         encodingType: Camera.EncodingType.JPEG,
-        cameraDirection: Camera.Direction.BACK,
-        targetWidth: 300,
-        targetHeight: 400,
-      }
-    )
-  }
+        correctOrientation: true,
+        targetWidth: 360,
+        targetHeight: 640,
+      },
+    );
+  });
 
-  const handleAddPrescription = () => {
-    takePicture(prescritionCategory);
+  const handleAddPrescription = async () => {
+    const imageData = await takePicture();
+    if (!imageData) return;
+
+    setImage({
+      src: 'data:image/jpeg;base64,' + imageData,
+      date: Date.now(),
+    });
   };
-
-  console.log(newPrescription);
 
   return (
     <Page>
       <Topbar title="Prescriptions" />
       <UnderlinedHeader title="Add prescription" />
       <PageContent className="no-padding-top">
-        <RadioSelect
-          title="Category"
-          options={categories}
-          select={prescritionCategory}
-        />
-        {!newPrescription && 
-          <Block>
-            <Button
-              fill
-              onClick={() => handleAddPrescription()}
-            >
-              Scan prescription
-            </Button>
-          </Block>
-        }
-        {newPrescription &&
-          <Block>
-            <img src={newPrescription.imageURI} width={300} height={400} />
-            <Button
-              fill
-              onClick={() => handleSaveChanges()}
-            >
-              Save changes
-            </Button>
-          </Block>
-        }
+        <List>
+          <ListInput
+            floatingLabel
+            label="Title"
+            type="text"
+            placeholder="Prescription title"
+            value={title}
+            onInput={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+          <RadioSelect
+            title="Category"
+            options={categories}
+            select={category}
+          />
+        </List>
+        <Block>
+          {image && <img src={image.src} className={mergeStyles({ width: '100%' })} />}
+          <Button
+            fill
+            onClick={image ? () => handleSaveChanges() : () => handleAddPrescription()}
+          >
+            {image ? 'Save' : 'Take picture'}
+          </Button>
+        </Block>
       </PageContent>
     </Page>
   );
