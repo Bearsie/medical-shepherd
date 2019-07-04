@@ -3,7 +3,7 @@ import { Block, Button, ListInput, Page, PageContent, List } from 'framework7-re
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { useSelectValue } from '../../hooks';
+import { useEventValue } from '../../hooks';
 import { RadioSelect } from '../../RadioSelect';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
@@ -40,7 +40,7 @@ const categories = [
 ];
 
 export const AddPrescription = (props) => {
-  const category = useSelectValue('Other');
+  const category = useEventValue('Other');
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(undefined);
 

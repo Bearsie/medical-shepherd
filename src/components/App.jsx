@@ -46,7 +46,7 @@ export const App = () => {
         <AppRoot params={f7params} routes={routes}>
           <Statusbar />
           <SideNav />
-          <View url={routePath.Welcome} main id="main-view" />
+          <View url={routePath.Profile} main id="main-view" />
         </AppRoot>
     </FirebaseProvider>
   );
