@@ -4,7 +4,7 @@ import { Block, BlockTitle, Button, Gauge, List, ListItem, Page, PageContent } f
 import { filter, get, includes, isEmpty, keyBy, map, round } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getConditions } from '../../../api/api';
+import { getConditions } from '../../../api/mockedResponses';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../../styles';
@@ -44,6 +44,8 @@ export const Results = (props) => {
   };
 
   const [bestMatchCondition, ...otherConditions] = conditions;
+
+  console.log(props.evidence, conditions)
 
 	return (
     <Page>
