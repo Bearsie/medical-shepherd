@@ -43,6 +43,7 @@ export const Profile = (props) => {
           var riskValues = doc.data()
           for (var risk in risks) {
             risks[risk].onChange(riskValues[risk] !== "Unknown" && riskValues[risk] !== "Yes" && riskValues[risk] !== "No" ? "No" : riskValues[risk])
+
           }
         }
       })
