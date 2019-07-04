@@ -35,8 +35,9 @@ export const Profile = (props) => {
   const Save = () => {
     var risksFormatted = {}
     for(var risk in risks){
-      risksFormatted[risk] = risks[risk].value
+      risksFormatted[risk] = (typeof risks[risk].value) === 'string' ? risks[risk].value : 'error value: ' +(typeof risks[risk].value)  
     }
+    
     db.collection(firebase.authUserId).doc('profileData').set({
       age: age.value,
       weight: weight.value,
