@@ -5,6 +5,7 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import { itemTitleWithNoEllipsis } from '../../../styles';
 import { Files } from '../../Icons';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
@@ -59,13 +60,16 @@ export const Category = (props) => {
         <List>
           {map(records, (result) => (
             <ListItem
+              className={itemTitleWithNoEllipsis}
               key={result.date}
               onSwipeoutDeleted={handleDeleteRecord(result.date)}
               swipeout
               link
               onClick={() => setViewedPrescription(result)}
               popupOpen=".prescription-image"
-              title={`${moment(result.date).format('DD-MM-YYYY')} ${result.category}`}
+              title={result.title}
+              footer={result.category}
+              after={moment(result.date).format('DD-MM-YYYY')}
             >
               <SwipeoutActions right>
                 <SwipeoutButton
@@ -84,7 +88,10 @@ export const Category = (props) => {
         header={get(viewedPrescription, 'category', '')}
         name="prescription-image"
       >
-        <UnderlinedHeader title={`${moment(get(viewedPrescription, 'date')).format('DD-MM-YYYY')}`} />
+        <UnderlinedHeader
+          title={get(viewedPrescription, 'title')}
+          subtitle={`${get(viewedPrescription, 'category')} | ${moment(get(viewedPrescription, 'date')).format('DD-MM-YYYY')}`}
+        />
         <div className={mergeStyles({ width: '100%', height: '100%' })}></div>
       </PagePopup>
     </Page>
