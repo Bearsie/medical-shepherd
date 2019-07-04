@@ -9,9 +9,10 @@ const styles = mergeStyleSets({
   uderlineWrapper: [{ flexDirection: 'column' }, 'display-flex', 'align-items-center', 'margin-bottom'],
 });
 
-export const UnderlinedHeader = ({ title }) => (
+export const UnderlinedHeader = ({ title, subtitle }) => (
   <>
     <h3 className="text-align-center no-margin-top no-margin-bottom">{title}</h3>
+    {subtitle && <h4 className="text-align-center no-margin-top no-margin-bottom">{subtitle}</h4>}
     <div className={styles.uderlineWrapper}>
       <div className={styles.firstLine} />
       <div className={styles.secondLine} />
@@ -21,4 +22,5 @@ export const UnderlinedHeader = ({ title }) => (
 
 UnderlinedHeader.propTypes = {
   title: PropTypes.string,
+  subtitle: PropTypes.string,
 };

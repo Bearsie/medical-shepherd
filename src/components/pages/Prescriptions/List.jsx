@@ -7,23 +7,59 @@ import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { Head } from '../../Icons';
+import { Alarm, Bandage, Bootle, BrokenLeg, Clock, CrossedPills, Crutches, Doctor, Drip, Dropper, Head, HeartBeat, HospitalBed, InterviewCard, Lungs, Microscope, OpenPills, Pills, Plus, Scalpel, Search, Sex, Shield, Sign, Stethoscope, Stomach, Syringe, Tooth, Torch } from '../../Icons';
 import { Topbar } from '../../Topbar';
 
 const mockedPrescriptions = [
   {
     date: 1561492575569,
     category: 'Psychiatry',
+    title: 'dr John Doe',
+    src: 'tesktjakiś',
   },
   {
     date: 1561499667349,
     category: 'Psychiatry',
+    title: 'hospital care'
   },
   {
     date: 1561499167349,
     category: 'Dentistry',
+    title: 'nutritional recommendations'
   },
 ];
+
+const iconMapper = {
+  Allergology: Pills,
+  Angiology: Syringe,
+  Cardiology: HeartBeat,
+  Dentistry: Tooth,
+  Dermatology: Dropper,
+  Diabetology: CrossedPills,
+  Endocrinology: Microscope,
+  Gastroenterology: Stomach,
+  Gynecology: InterviewCard,
+  Hematology: Plus,
+  Hypertensiology: OpenPills,
+  Infectiology: Doctor,
+  'Internal Medicine': Stethoscope,
+  'Laryngology/ENT': Alarm,
+  Nephrology: Sign,
+  Neurology: Head,
+  Oncology: Drip,
+  Ophthalmology: Search,
+  Orthopedics: BrokenLeg,
+  Other: Shield,
+  Psychiatry: HospitalBed,
+  Pulmonology: Lungs,
+  Rheumatology: Crutches,
+  Surgery: Scalpel,
+  Toxicology: Bootle,
+  Traumatology: Bandage,
+  Urology: Torch,
+  Venereology: Sex,
+  Recent: Clock,
+};
 
 const styles = mergeStyleSets({
   addButton: {
@@ -87,20 +123,24 @@ export const List = (props) => {
           </Link>
         </Row>
         <Row className={mergeStyles({ justifyContent: 'space-between'})}>
-          {map(categories, (category) => (
-            <Link
-              className={styles.category}
-              href={routePath.PrescriptionCategory}
-              key={category}
-              routeProps={{
-                category,
-                prescriptions: prescriptionsGroupedByCategory[category],
-              }}
-            >
-                <div>{category}</div>
-                <Head className={styles.categoryIcon} />
-            </Link>
-          ))}
+          {map(categories, (category) => {
+            const Icon = iconMapper[category];
+
+            return (
+              <Link
+                className={styles.category}
+                href={routePath.PrescriptionCategory}
+                key={category}
+                routeProps={{
+                  category,
+                  prescriptions: prescriptionsGroupedByCategory[category],
+                }}
+              >
+                  <div>{category}</div>
+                  <Icon className={styles.categoryIcon} />
+              </Link>
+            );
+          })}
         </Row>
         <Button
           className={styles.addButton}
