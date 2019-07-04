@@ -1,11 +1,11 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { routePath } from '../../routes';
 import { Divider } from "../Divider";
+import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
-import { FirebaseConsumer } from '../Firebase';
 
 const socialMediaButtonStyles = {
   height: '48px',
@@ -17,23 +17,22 @@ const socialMediaButtonStyles = {
 export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
+  const firebase = useContext(FirebaseContext);
 
-  const register = (fireProps) => {
-    fireProps.firebase
-      .createUserWithEmail(userName, password)
-      .then(authUser => {
-        fireProps.saveAuthUser(authUser.user)
-      })
-      .then(() => {
-        props.f7router.app.dialog.alert(`Registration successful!`, () => {
-          props.f7router.navigate(routePath.Home);
-        });
-      })
-      .catch((error) => {
-        props.f7router.app.dialog.alert(error.message, () => {
-          console.log(error)
-        });
-      });
+  const register = async () => {
+    try {
+      const newUser = await auth.createUserWithEmailAndPassword(userName, password);
+      firebase.setAuthUserId(newUser.user.uid);
+      props.f7router.navigate(routePath.Home)
+    } catch (error) {
+      handleError(error);
+    }
+  };
+
+  const handleError = (error) => {
+    props.f7router.app.dialog.alert(error.message, () => {
+      console.log(error);
+    });
   };
 
   const registerSocial = () => {
@@ -47,41 +46,38 @@ export const Register = (props) => {
         You are one step away from better health!<br />
         Go ahead.
       </Block>
-      <FirebaseConsumer>
-        {fireProps => <List form>
-          <ListInput
-            floatingLabel
-            label="E-mail"
-            type="email"
-            placeholder="Your e-mail"
-            value={userName}
-            onInput={(e) => {
-              setUserName(e.target.value);
-            }}
-          />
-          <ListInput
-            floatingLabel
-            label="Password"
-            type="password"
-            placeholder="At least 8 characters"
-            value={password}
-            onInput={(e) => {
-              setPassword(e.target.value);
-            }}
-          />
-          <Block>
-            <Button large fill onClick={() => register(fireProps)}>Sign up</Button>
-            <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-            <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
-            <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
-          </Block>
-        </List>}
-      </FirebaseConsumer>
+      <List form>
+        <ListInput
+          floatingLabel
+          label="E-mail"
+          type="email"
+          placeholder="Your e-mail"
+          value={userName}
+          onInput={(e) => {
+            setUserName(e.target.value);
+          }}
+        />
+        <ListInput
+          floatingLabel
+          label="Password"
+          type="password"
+          placeholder="At least 8 characters"
+          value={password}
+          onInput={(e) => {
+            setPassword(e.target.value);
+          }}
+        />
+        <Block>
+          <Button large fill onClick={register}>Sign up</Button>
+          <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
+          <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
+          <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
+        </Block>
+      </List>
     </Page>
   );
 };
 
 Register.propTypes = {
   f7router: PropTypes.object,
-  fireProps: PropTypes.object,
 };
