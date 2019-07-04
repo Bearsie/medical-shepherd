@@ -20,7 +20,9 @@ export const chipWithNoEllipsis = mergeStyles({
   selectors: {
     '.chip-label': { wordBreak: 'break-word', whiteSpace: 'pre-wrap' },
   },
-})
+});
+
+export const sticky = mergeStyles({ position: 'sticky', top: 0 });
 
 export const colorPrimary = '#16ade1';
 export const colorSecondary = '#1B3954';

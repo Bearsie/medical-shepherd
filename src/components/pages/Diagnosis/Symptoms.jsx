@@ -4,12 +4,13 @@ import { Block, BlockTitle, Button, Chip, Page } from 'framework7-react';
 import { isEmpty, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getSymptoms } from '../../../api/api';
+import { getSymptoms } from '../../../api/mockedResponses';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
 import { BrokenArm } from '../../Icons';
-import { PopupSelect } from '../../PopupSelect';
+import { MultiSelect } from '../../MultiSelect';
+import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
 
@@ -18,7 +19,6 @@ import mockedProfileData from '../../../api/mockedResponses/profileData';
 export const Symptoms = (props) => {
   const [symptoms, setSymptoms] = useState([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState({});
-  const [popupOpened, togglePopupOpened] = useState(false);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
@@ -39,14 +39,6 @@ export const Symptoms = (props) => {
     }
   };
 
-  const handleOpenSymptoms = () => {
-    togglePopupOpened(true);
-  };
-
-  const handleCloseSymptoms = () => {
-    togglePopupOpened(false);
-  };
-
   return (
     <Page>
       <Topbar title="Diagnosis" />
@@ -55,7 +47,7 @@ export const Symptoms = (props) => {
         <BrokenArm className={mergeStyles({ width: '100px', height: '100px' })} />
         <Button
           fill
-          onClick={handleOpenSymptoms}
+          popupOpen=".symptom-list"
         >
           Add symptoms
         </Button>
@@ -84,25 +76,27 @@ export const Symptoms = (props) => {
           Continue
         </Button>
       </Block>
-      <PopupSelect
-        getTitle={(symptom) => symptom.common_name}
+      <PagePopup
         header="Symptoms"
-        items={symptoms}
-        onChange={(symptom) => {
-          if (selectedSymptoms[symptom.id]) {
-            setSelectedSymptoms(omit(selectedSymptoms, symptom.id));
-            return;
-          }
-
-          setSelectedSymptoms({
-            ...selectedSymptoms,
-            [symptom.id]: symptom,
-          })
-        }}
-        onPopupClosed={handleCloseSymptoms}
-        popupOpened={popupOpened}
-        selectedItems={selectedSymptoms}
-      />
+        name="symptom-list"
+      >
+        <MultiSelect
+          getTitle={(symptom) => symptom.common_name}
+          items={symptoms}
+          onChange={(symptom) => {
+            if (selectedSymptoms[symptom.id]) {
+              setSelectedSymptoms(omit(selectedSymptoms, symptom.id));
+              return;
+            }
+  
+            setSelectedSymptoms({
+              ...selectedSymptoms,
+              [symptom.id]: symptom,
+            })
+          }}
+          selectedItems={selectedSymptoms}
+        />
+      </PagePopup>
     </Page>
   );
 };

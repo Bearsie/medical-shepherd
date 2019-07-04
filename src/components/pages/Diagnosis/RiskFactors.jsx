@@ -4,12 +4,13 @@ import { Block, BlockTitle, Button, Chip, List, Page } from 'framework7-react';
 import { isEmpty, keyBy, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getRiskFactors } from '../../../api/api';
+import { getRiskFactors } from '../../../api/mockedResponses';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
 import { Divider } from '../../Divider';
-import { PopupSelect } from '../../PopupSelect';
+import { MultiSelect } from '../../MultiSelect';
+import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
 import { getRiskFactorsFromProfile, getRiskFactorsToSelectFrom } from './utils';
@@ -17,7 +18,6 @@ import { getRiskFactorsFromProfile, getRiskFactorsToSelectFrom } from './utils';
 export const RiskFactors = (props) => {
   const [riskFactors, setRiskFactors] = useState([]);
   const [selectedRiskFactors, setSelectedRiskFactors] = useState({});
-  const [popupOpened, togglePopupOpened] = useState(false);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
@@ -36,14 +36,6 @@ export const RiskFactors = (props) => {
     } catch(error) {
       showErrorMessage(error);
     }
-  };
-
-  const handleOpenRiskFactors = () => {
-    togglePopupOpened(true);
-  };
-
-  const handleCloseRiskFactors = () => {
-    togglePopupOpened(false);
   };
 
   const commonRisksFromProfile = getRiskFactorsFromProfile(props.profileData);
@@ -81,7 +73,7 @@ export const RiskFactors = (props) => {
         <List>
           <Button
             fill
-            onClick={handleOpenRiskFactors}
+            popupOpen=".risk-factor-list"
           >
             Add more
           </Button>
@@ -103,25 +95,27 @@ export const RiskFactors = (props) => {
           </Button>
         </List>
       </Block>
-      <PopupSelect
-        getTitle={(riskFactor) => riskFactor.common_name}
+      <PagePopup
         header="Risk factors"
-        items={riskFactors}
-        onChange={(riskFactor) => {
-          if (selectedRiskFactors[riskFactor.id]) {
-            setSelectedRiskFactors(omit(selectedRiskFactors, riskFactor.id));
-            return;
-          }
-
-          setSelectedRiskFactors({
-            ...selectedRiskFactors,
-            [riskFactor.id]: riskFactor,
-          })
-        }}
-        onPopupClosed={handleCloseRiskFactors}
-        popupOpened={popupOpened}
-        selectedItems={selectedRiskFactors}
-      />
+        name="risk-factor-list"
+      >
+        <MultiSelect
+          getTitle={(riskFactor) => riskFactor.common_name}
+          items={riskFactors}
+          onChange={(riskFactor) => {
+            if (selectedRiskFactors[riskFactor.id]) {
+              setSelectedRiskFactors(omit(selectedRiskFactors, riskFactor.id));
+              return;
+            }
+  
+            setSelectedRiskFactors({
+              ...selectedRiskFactors,
+              [riskFactor.id]: riskFactor,
+            })
+          }}
+          selectedItems={selectedRiskFactors}
+        />
+      </PagePopup>
     </Page>
   );
 };
