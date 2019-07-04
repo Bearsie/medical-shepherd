@@ -1,14 +1,14 @@
-import { Block, BlockTitle, Button, Page, PageContent} from 'framework7-react';
+import { Block, BlockTitle, Button, Page, PageContent } from 'framework7-react';
 import { map, reduce } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect } from 'react';
 import { routePath } from '../../routes';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
 import { Topbar } from '../Topbar';
-import {RadioSelect} from '../RadioSelect';
-import {RangeSelect} from '../RangeSelect';
-import {useSelectValue} from '../hooks';
-import { db , FirebaseContext } from '../Firebase';
+import { RadioSelect } from '../RadioSelect';
+import { RangeSelect } from '../RangeSelect';
+import { useSelectValue } from '../hooks';
+import { db, FirebaseContext } from '../Firebase';
 
 const commonRisks = [
   'Aortic aneurysm',
@@ -29,26 +29,49 @@ const commonRisks = [
 export const Profile = (props) => {
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
+
+    docProfileData.get().then((doc) => {
+      if (doc.exists) {
+        age.onChange(doc.data().age)
+        weight.onChange(doc.data().weight)
+        height.onChange(doc.data().height)
+        sex.onChange(doc.data().sex)
+        place.onChange(doc.data().place)
+      }
+      docRisks.get().then((doc) => {
+        if (doc.exists) {
+          var riskValues = doc.data()
+          for (var risk in risks) {
+            risk.onChange(riskValues[risk] !== "Unknown" && riskValues[risk] !== "Yes" && riskValues[risk] !== "No" ? "No" : riskValues[risk])
+          }
+        }
+      })
+    })
+
+
   }, []);
   const firebase = useContext(FirebaseContext);
 
   const Save = () => {
     var risksFormatted = {}
-    for(var risk in risks){
-      risksFormatted[risk] = (typeof risks[risk].value) === 'string' ? risks[risk].value : 'error value: ' +(typeof risks[risk].value)  
+    for (var risk in risks) {
+      risksFormatted[risk] = (typeof risks[risk].value) === 'string' ? risks[risk].value : 'error value: ' + (typeof risks[risk].value)
     }
-    
-    db.collection(firebase.authUserId).doc('profileData').set({
+
+    docProfileData.set({
       age: age.value,
       weight: weight.value,
       height: height.value,
-      sex: sex.value
+      sex: (typeof sex.value) === 'string' ? sex.value : 'error value: ' + (typeof sex.value),
+      place: (typeof place.value) === 'string' ? place.value : 'error value: ' + (typeof place.value)
     })
-    db.collection(firebase.authUserId).doc('risks').set(risksFormatted)
+    docRisks.set(risksFormatted)
     props.f7router.navigate(routePath.Home);
   };
+  const docProfileData = db.collection(firebase.authUserId).doc('profileData');
+  const docRisks = db.collection(firebase.authUserId).doc('risks');
 
-  const age = useSelectValue(52);
+  const age = useSelectValue(53);
   const weight = useSelectValue(95);
   const height = useSelectValue(180);
   const sex = useSelectValue('Male');
