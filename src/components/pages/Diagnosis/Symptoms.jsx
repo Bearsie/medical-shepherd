@@ -4,7 +4,7 @@ import { Block, BlockTitle, Button, Chip, Page } from 'framework7-react';
 import { isEmpty, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getSymptoms } from '../../../api/mockedResponses';
+import { getSymptoms } from '../../../api/api';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';

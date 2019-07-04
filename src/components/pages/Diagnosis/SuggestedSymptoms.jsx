@@ -3,7 +3,7 @@ import { Block, Button, List, ListItem, Page } from 'framework7-react';
 import { keyBy, keys, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
-import { getSuggestedSymptoms } from '../../../api/mockedResponses';
+import { getSuggestedSymptoms } from '../../../api/api';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { itemTitleWithNoEllipsis } from '../../../styles';
