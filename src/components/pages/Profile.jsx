@@ -1,13 +1,14 @@
 import { Block, BlockTitle, Button, Page, PageContent} from 'framework7-react';
 import { map, reduce } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { routePath } from '../../routes';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
 import { Topbar } from '../Topbar';
 import {RadioSelect} from '../RadioSelect';
 import {RangeSelect} from '../RangeSelect';
 import {useSelectValue} from '../hooks';
+import { db , FirebaseContext } from '../Firebase';
 
 const commonRisks = [
   'Aortic aneurysm',
@@ -29,8 +30,20 @@ export const Profile = (props) => {
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
   }, []);
+  const firebase = useContext(FirebaseContext);
 
   const Save = () => {
+    var risksFormatted = {}
+    for(var risk in risks){
+      risksFormatted[risk] = risks[risk].value
+    }
+    db.collection(firebase.authUserId).doc('profileData').set({
+      age: age.value,
+      weight: weight.value,
+      height: height.value,
+      sex: sex.value
+    })
+    db.collection(firebase.authUserId).doc('risks').set(risksFormatted)
     props.f7router.navigate(routePath.Home);
   };
 

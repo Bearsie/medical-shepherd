@@ -26,7 +26,7 @@ export const FirebaseProvider = (props) => {
   }, [authUserId])
 
   // User API
-  const usersCollection = (userId) => db.collection('users').doc(userId);
+  const usersCollection = (userId) => db.collection(userId).doc('profile');
   const getUserIdCollection = (userId) => usersCollection(userId).get();
 
   return (
