@@ -1,56 +1,28 @@
-### Features
+### Medical Shepherd
+Medical Shepherd jest aplikacją pozwalającą zdiagnozować swoje objawy bez wychodzenia z domu, a także podpowiedzieć do jakiego specjalisty powinniśmy się udać ze swoimi schorzeniami.
+### Głóne funkcjonalności aplikacji
+- Diagnoza choroby
+![](./Diagnoza.png)
+- Zapisanie zgiadnozowanej choroby
+![](./Historia.png)
+- Przypomnienie o wizycie u specjalisty
 
-Features
+- Przechowywanie recept i zaleceń lekarza
+![](./Recepty.png)
+### Diagram UML
 
-- Framework7 v4
-- React v16
-- Fabric mergeStyles
-- Font Awesome
-- Webpack v4
-- Cordova
-- Ionic Native v5
-- ES6 / ES7
+![](./zdj.png)
 
-## Installation
+### Linki
+- Repozytorium: https://github.com/Bearsie/medical-shepherd
+- Prototyp (ekrany): https://www.figma.com/file/05Cp24rVSRHaXRDqeQtRjeGP/Untitled?node-id=778%3A0
+- Prototyp (klikalny):https://www.figma.com/proto/05Cp24rVSRHaXRDqeQtRjeGP/Untitled?node-id=0%3A1&scaling=scale-down
+- Zarządzanie projektem: https://trello.com/b/mfucQtLq/trello-board
+- Aplikacja: - phonegap link - 
 
-Step 1: Clone this repo
 
-```
-git clone https://github.com/Bearsie/medical-shepherd.git
-cd medical-shepherd
-```
-
-Step 2: Install
-
-```
-yarn install
-```
-
-Step 3: Start
-
-- open in a browser with live reload enabled
-```
-yarn start
-```
-- build and run app on emulator
-```
-yarn emulate
-```
-
-### List of other Yarn Commands
-
-```sh
-$ yarn dev       # build and open in watch mode
-$ yarn build     # build a minified production version
-```
-
-### List of Cordova Commands
-
-```sh
-$ cordova platform add android    # add android platform to your project
-$ cordova run android # launch the app on Android device or emulator
-```
-
-## License
-
-MIT ©
+### Skład zespołu
+ - Patryk Maziarz
+ - Grzegorz Roczniak
+ - Kamil Smoleń
+ - Wojciech Niedzwiedź
