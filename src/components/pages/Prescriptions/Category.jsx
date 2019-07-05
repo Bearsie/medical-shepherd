@@ -112,7 +112,7 @@ export const Category = (props) => {
           title={get(viewedPrescription, 'title')}
           subtitle={`${get(viewedPrescription, 'category')} | ${moment(get(viewedPrescription, 'date')).format('DD-MM-YYYY')}`}
         />
-        <div className={mergeStyles({ width: '100%', height: '100%' })}></div>
+        <img src={get(viewedPrescription, 'src', '')} className={mergeStyles({ width: '100%' })} />
       </PagePopup>
     </Page>
   );
