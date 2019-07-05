@@ -18,6 +18,7 @@ export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
+  const [isSocial, setSocial] = useState(props.social);
 
 
   const register = async () => {
@@ -37,6 +38,7 @@ export const Register = (props) => {
   };
 
   const registerSocial = () => {
+    setSocial(true);
   };
 
   return (
@@ -70,9 +72,13 @@ export const Register = (props) => {
         />
         <Block>
           <Button large fill onClick={register}>Sign up</Button>
-          <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-          <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
-          <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
+          {!props.social && !isSocial &&
+            <>
+              <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
+              <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
+              <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
+            </>
+          }
         </Block>
       </List>
     </Page>
@@ -81,4 +87,5 @@ export const Register = (props) => {
 
 Register.propTypes = {
   f7router: PropTypes.object,
+  social: PropTypes.bool,
 };
