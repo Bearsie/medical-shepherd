@@ -19,20 +19,6 @@ export const Login = (props) => {
   const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
 
-  useEffect(() => {
-    const logIn = async () => {
-      try {
-        const regularUser = await auth.signInWithEmailAndPassword(userName, password);
-        firebase.setAuthUserId(regularUser.user.uid);
-        props.f7router.navigate(routePath.Home);
-      } catch (error) {
-        handleError(error);
-      }
-    };
-
-    logIn();
-  }, []);
-
   const signIn = async () => {
     try {
       const regularUser = await auth.signInWithEmailAndPassword(userName, password);
@@ -50,6 +36,7 @@ export const Login = (props) => {
   };
 
   const signInSocial = () => {
+    props.f7router.navigate(routePath.Register, { props: { social: true }});
   };
 
   return (
