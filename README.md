@@ -1,17 +1,16 @@
 ### Medical Shepherd
 Medical Shepherd jest aplikacją pozwalającą zdiagnozować swoje objawy bez wychodzenia z domu, a także podpowiedzieć do jakiego specjalisty powinniśmy się udać ze swoimi schorzeniami.
-### Głóne funkcjonalności aplikacji
-- Diagnoza choroby
-![](./Diagnoza.png)
-- Zapisanie zgiadnozowanej choroby
-![](./Historia.png)
+### Głwóne funkcjonalności aplikacji
+- Diagnoza choroby  
+![](./Diagnoza.PNG)
 
-
+- Zapisanie zgiadnozowanej choroby  
+![](./Historia.PNG)
 - Przechowywanie recept i zaleceń lekarza
-![](./Recepty.png)
+ ![](./Recepty.PNG)
 ### Diagram UML
 
-![](./zdj.png)
+![](./zdj.PNG)
 
 ### Linki
 - Repozytorium: https://github.com/Bearsie/medical-shepherd
