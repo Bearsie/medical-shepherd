@@ -12,7 +12,7 @@ Medical Shepherd jest aplikacją pozwalającą zdiagnozować swoje objawy bez wy
  
 ### Diagram UML     
 
-![](./zdj.PNG)
+![](./zdj.png)
 
 ### Linki
 - Repozytorium: https://github.com/Bearsie/medical-shepherd
