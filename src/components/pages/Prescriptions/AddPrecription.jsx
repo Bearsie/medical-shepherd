@@ -1,9 +1,12 @@
 import { mergeStyles } from '@uifabric/merge-styles';
-import { Block, Button, ListInput, Page, PageContent, List } from 'framework7-react';
+import { Block, Button, List, ListInput, Page, PageContent } from 'framework7-react';
+import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { useEventValue } from '../../hooks';
+import { db, FirebaseContext } from '../../Firebase';
+import { useValue } from '../../hooks';
 import { RadioSelect } from '../../RadioSelect';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
@@ -39,8 +42,11 @@ const categories = [
   'Venereology',
 ];
 
+const prescriptionsCollection = db.collection('prescriptions');
+
 export const AddPrescription = (props) => {
-  const category = useEventValue('Other');
+  const firebase = useContext(FirebaseContext);
+  const category = useValue('Other');
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(undefined);
 
@@ -48,13 +54,25 @@ export const AddPrescription = (props) => {
     RegisterBackButtonAction(props.f7router);
   }, []);
 
-  const handleSaveChanges = () => {
+  const handleSaveChanges = async () => {
     const newPrescription = {
-      category,
+      category: category.value,
       title,
       ...image,
     };
-    //saveToFirebase([...props.prescriptions, newPrescription]);
+
+    try {
+      await firebase.updateCollection(
+        prescriptionsCollection,
+        firebase.authUserId,
+        { prescriptions: [...props.prescriptions, newPrescription] },
+      );
+  
+      props.f7router.app.dialog.alert('Prescription added!');
+      props.f7router.navigate(routePath.PrescriptionList);
+    } catch (error) {
+      onError(error);
+    }
   };
 
   const onError = (error) => {
@@ -110,16 +128,16 @@ export const AddPrescription = (props) => {
           <RadioSelect
             title="Category"
             options={categories}
-            select={category}
+            {...category}
           />
         </List>
         <Block>
-          {image && <img src={image.src} className={mergeStyles({ width: '100%' })} />}
+          {!isEmpty(image) && <img src={image.src} className={mergeStyles({ width: '100%' })} />}
           <Button
             fill
-            onClick={image ? () => handleSaveChanges() : () => handleAddPrescription()}
+            onClick={!isEmpty(image) ? () => handleSaveChanges() : () => handleAddPrescription()}
           >
-            {image ? 'Save' : 'Take picture'}
+            {!isEmpty(image) ? 'Save' : 'Take picture'}
           </Button>
         </Block>
       </PageContent>

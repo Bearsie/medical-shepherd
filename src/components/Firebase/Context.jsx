@@ -1,39 +1,28 @@
 import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
-import { db } from './firebase';
+import React, { useState } from 'react';
 
 export const FirebaseContext = React.createContext({
   authUserId: '',
   setAuthUserId: () => {},
-  userData: [],
+  getCollection: () => {},
+  setCollection: () => {},
+  updateCollection: () => {},
 });
 
 export const FirebaseProvider = (props) => {
   const [authUserId, setAuthUserId] = useState('');
-  const [userData, setUserData] = useState([]);
 
-  useEffect(() => {
-    const getUserData = async () => {
-      console.log(authUserId);
-      const userDocument = await getUserIdCollection(authUserId);
-      console.log(userDocument.data());
-      setUserData(userDocument.data());
-    };
-
-    if (authUserId) {
-      getUserData();
-    }
-  }, [authUserId])
-
-  // User API
-  const usersCollection = (userId) => db.collection(userId).doc('profile');
-  const getUserIdCollection = (userId) => usersCollection(userId).get();
+  const getCollection = (collection, userId) => collection.doc(userId).get();
+  const setCollection = (collection, userId, payload) => collection.doc(userId).set(payload);
+  const updateCollection = (collection, userId, payload) => collection.doc(userId).update(payload);
 
   return (
     <FirebaseContext.Provider value={{
       authUserId,
       setAuthUserId,
-      userData,
+      getCollection,
+      setCollection,
+      updateCollection,
     }}>
       {props.children}
     </FirebaseContext.Provider>

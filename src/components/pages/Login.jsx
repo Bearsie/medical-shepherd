@@ -1,6 +1,6 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { routePath } from '../../routes';
 import { Divider } from "../Divider";
@@ -18,6 +18,20 @@ export const Login = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
+
+  useEffect(() => {
+    const logIn = async () => {
+      try {
+        const regularUser = await auth.signInWithEmailAndPassword(userName, password);
+        firebase.setAuthUserId(regularUser.user.uid);
+        props.f7router.navigate(routePath.Home);
+      } catch (error) {
+        handleError(error);
+      }
+    };
+
+    logIn();
+  }, []);
 
   const signIn = async () => {
     try {

@@ -3,26 +3,46 @@ import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, Chip, Page } from 'framework7-react';
 import { isEmpty, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { getSymptoms } from '../../../api';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
+import { db, FirebaseContext } from '../../Firebase';
 import { BrokenArm } from '../../Icons';
 import { MultiSelect } from '../../MultiSelect';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
 
-import mockedProfileData from '../../../api/mockedResponses/profileData';
+const profileCollection = db.collection('profile');
 
 export const Symptoms = (props) => {
+  const firebase = useContext(FirebaseContext);
   const [symptoms, setSymptoms] = useState([]);
   const [selectedSymptoms, setSelectedSymptoms] = useState({});
+  const [profileData, setProfileData] = useState({});
+  const [allowDiagnosis, setAllowDiagnosis] = useState(false);
+
+  useEffect(() => {
+    const getProfileCollection = async () => {
+      const snapshot = await firebase.getCollection(profileCollection, firebase.authUserId);
+      const profileData = snapshot.data();
+
+      if (profileData) {
+        setProfileData(profileData);
+        setAllowDiagnosis(true);
+        fetchSymptoms();
+      } else {
+        props.f7router.app.dialog.alert('To get diagnosis You need to fill your profile data! Go to Profile tab!');
+      }
+    };
+
+    getProfileCollection();
+  }, []);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
-    fetchSymptoms();
   }, []);
 
   const showErrorMessage = (error) => {
@@ -47,6 +67,7 @@ export const Symptoms = (props) => {
         <BrokenArm className={mergeStyles({ width: '100px', height: '100px' })} />
         <Button
           fill
+          disabled={!allowDiagnosis}
           popupOpen=".symptom-list"
         >
           Add symptoms
@@ -71,7 +92,7 @@ export const Symptoms = (props) => {
             visibility: isEmpty(selectedSymptoms) ? 'hidden' : 'visible',
           })}
           href={routePath.RiskFactors}
-          routeProps={{ selectedSymptoms, profileData: mockedProfileData }}
+          routeProps={{ selectedSymptoms, profileData }}
         >
           Continue
         </Button>

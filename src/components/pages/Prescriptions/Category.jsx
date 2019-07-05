@@ -3,18 +3,25 @@ import { Block, BlockTitle, Button, List, ListItem, Page, PageContent, SwipeoutA
 import { get, isEmpty, map, orderBy, reject } from 'lodash';
 import moment from 'moment';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { itemTitleWithNoEllipsis } from '../../../styles';
 import { Files } from '../../Icons';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
+import { FirebaseContext, db } from '../../Firebase';
+import { routePath } from '../../../routes';
+
+const prescriptionsCollection = db.collection('prescriptions');
 
 export const Category = (props) => {
+  const firebase = useContext(FirebaseContext);
   const [records, setRecords] = useState(orderBy(props.prescriptions, 'date', 'desc'));
   const [areDeletedRecords, setAreDeletedRecords] = useState(false);
   const [viewedPrescription, setViewedPrescription] = useState(undefined);
+  const [someRecordWereDeleted, setSomeRecordWereDeleted] = useState(false);
+  const [allPrescriptions, setAllPrescriptions] = useState(props.allPrescriptions);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
@@ -22,17 +29,33 @@ export const Category = (props) => {
 
   const handleDeleteRecord = (recordId) => () => {
     setRecords(reject(records, ['date', recordId]));
+    setAllPrescriptions(reject(allPrescriptions, ['date', recordId]));
     setAreDeletedRecords(true);
   };
 
-  const handleSaveChanges = () => {
-    // saveToFirebase(records)
-    setAreDeletedRecords(false);
+  const handleSaveChanges = async () => {
+    try {
+      await firebase.updateCollection(
+        prescriptionsCollection,
+        firebase.authUserId,
+        { prescriptions: allPrescriptions },
+      );
+  
+      props.f7router.app.dialog.alert('Changes saved!');
+      setAreDeletedRecords(false);
+      setSomeRecordWereDeleted(true);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const onError = (error) => {
+    props.f7router.app.dialog.alert('An error occured: ', error.message);
   };
 
   return (
     <Page>
-      <Topbar title="Prescriptions" />
+      <Topbar title="Prescriptions" linkPath={someRecordWereDeleted ? routePath.PrescriptionList : undefined} />
       <UnderlinedHeader title={props.category} />
       <PageContent className="no-padding-top">
         {isEmpty(records) && (
@@ -72,10 +95,7 @@ export const Category = (props) => {
               after={moment(result.date).format('DD-MM-YYYY')}
             >
               <SwipeoutActions right>
-                <SwipeoutButton
-                  delete
-                  confirmText="Are you sure you want to delete this record?"
-                >
+                <SwipeoutButton delete>
                   Delete
                 </SwipeoutButton>
               </SwipeoutActions>
@@ -101,5 +121,6 @@ export const Category = (props) => {
 Category.propTypes = {
   f7router: PropTypes.object,
   category: PropTypes.string,
-  prescriptions: PropTypes.object,
+  prescriptions: PropTypes.array,
+  allPrescriptions: PropTypes.array,
 };
