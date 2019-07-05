@@ -2,13 +2,13 @@ import { mergeStyles } from '@uifabric/merge-styles';
 import { AccordionContent, Block, BlockTitle, Button, Gauge, List, ListItem, Page, PageContent, SwipeoutActions, SwipeoutButton } from 'framework7-react';
 import { isEmpty, map, orderBy, reject, round } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../styles';
 import { Files } from '../Icons';
 import { Topbar } from '../Topbar';
-
-import mockedDiagnosisData from '../../api/mockedResponses/diagnosisData';
+import { FirebaseContext, db } from '../Firebase';
+import { routePath } from '../../routes';
 
 const dateOptions = {
   weekday: 'long',
@@ -19,29 +19,60 @@ const dateOptions = {
   minutes: 'numeric',
 };
 
-const orderedResults = orderBy(mockedDiagnosisData, 'date', 'desc');
+const diagnosisCollection = db.collection('diagnosis');
 
 export const History = (props) => {
-  const [records, setRecords] = useState(orderedResults);
+  const firebase = useContext(FirebaseContext);
+  const [records, setRecords] = useState({});
   const [areDeletedRecords, setAreDeletedRecords] = useState(false);
+  const [allDiagnosis, setAllDiagnosis] = useState([]);
+  const [someRecordWereDeleted, setSomeRecordWereDeleted] = useState(false);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
+    getAllDiagnosis();
   }, []);
+
+  const getAllDiagnosis = async () => {
+    const snapshot = await firebase.getCollection(diagnosisCollection, firebase.authUserId);
+    const diagnosisData = snapshot.data();
+
+    if (diagnosisData) {
+      const orderedResults = orderBy(diagnosisData.diagnosis, 'date', 'desc');
+      setRecords(orderedResults);
+      setAllDiagnosis(diagnosisData.diagnosis);
+    }
+  };
 
   const handleDeleteRecord = (recordId) => () => {
     setRecords(reject(records, ['date', recordId]));
+    setAllDiagnosis(reject(allDiagnosis, ['date', recordId]));
     setAreDeletedRecords(true);
   };
 
-  const handleSaveChanges = () => {
-    console.log('recordsToSave', records);
-    setAreDeletedRecords(false);
+  const handleSaveChanges = async () => {
+    try {
+      await firebase.updateCollection(
+        diagnosisCollection,
+        firebase.authUserId,
+        { diagnosis: allDiagnosis },
+      );
+  
+      props.f7router.app.dialog.alert('Changes saved!');
+      setAreDeletedRecords(false);
+      setSomeRecordWereDeleted(true);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const onError = (error) => {
+    props.f7router.app.dialog.alert('An error occured: ', error.message);
   };
 
   return (
     <Page>
-      <Topbar title="History of diseases" />
+      <Topbar title="History of diseases" linkPath={someRecordWereDeleted ? routePath.Home : undefined} />
       <PageContent className="no-padding-top">
         {isEmpty(records) && (
           <Block className="text-align-center">
@@ -75,10 +106,7 @@ export const History = (props) => {
               title={new Date(result.date).toLocaleDateString('en-US', dateOptions)}
             >
               <SwipeoutActions right>
-                <SwipeoutButton
-                  delete
-                  confirmText="Are you sure you want to delete this record?"
-                >
+                <SwipeoutButton delete>
                   Delete
                 </SwipeoutButton>
               </SwipeoutActions>

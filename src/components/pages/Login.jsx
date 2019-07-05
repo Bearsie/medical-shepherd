@@ -1,6 +1,6 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { routePath } from '../../routes';
 import { Divider } from "../Divider";
@@ -36,6 +36,7 @@ export const Login = (props) => {
   };
 
   const signInSocial = () => {
+    props.f7router.navigate(routePath.Register, { props: { social: true }});
   };
 
   return (

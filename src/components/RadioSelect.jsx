@@ -1,22 +1,64 @@
-import React from 'react';
+import { mergeStyles } from '@uifabric/merge-styles';
+import { Link, List, ListItem, PageContent, Sheet, Toolbar } from 'framework7-react';
+import { map, startCase } from 'lodash';
 import PropTypes from 'prop-types';
-import { List, ListItem} from 'framework7-react';
-import { map } from 'lodash';
+import React, { useEffect, useState } from 'react';
+import { itemTitleWithNoEllipsis } from '../styles';
 
-export const RadioSelect = ({ title, select, options }) => (
-    <List className="no-margin">
-      <ListItem title={title} smartSelect smartSelectParams={{ openIn: 'sheet' }} >
-        <select name={title} {...select}>
-          {map(options, (option) => (
-            <option key={option} value={option}>{option}</option>
-          ))}
-        </select>
-      </ListItem>
-    </List>
-  );
+export const RadioSelect = ({ title, value, onChange, options }) => { 
+  const [sheetOpened, setSheetOpened] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('Unknown');
+
+  useEffect(() => {
+    setSelectedOption(value);
+  }, [value])
+
+  return (
+    <>
+      <List className="no-margin">
+        <ListItem
+          className={itemTitleWithNoEllipsis}
+          link
+          onClick={() => setSheetOpened(true)}
+          title={title}
+        >
+          <span className={mergeStyles({ maxWidth: '100px', textAlign: 'right' })} slot="after-title">
+            {startCase(selectedOption)}
+          </span>
+        </ListItem>
+      </List>
+    
+      <Sheet
+        className={`radio-select-${title}`}
+        opened={sheetOpened}
+        onSheetClosed={() => {setSheetOpened(false)}}
+      >
+        <Toolbar>
+          <div className="left"></div>
+          <div className="right">
+            <Link sheetClose>Close</Link>
+          </div>
+        </Toolbar>
+        <PageContent>
+          <List className="no-margin">
+            {map(options, (option) => (
+              <ListItem
+                radio
+                checked={option === selectedOption}
+                key={option}
+                title={option}
+                onChange={() => onChange(option)}
+              />
+            ))}
+          </List>
+        </PageContent>
+      </Sheet>
+    </>);
+  };
   
   RadioSelect.propTypes = {
     options: PropTypes.array,
-    select: PropTypes.object,
+    value: PropTypes.string,
+    onChange: PropTypes.func,
     title: PropTypes.string,
   };

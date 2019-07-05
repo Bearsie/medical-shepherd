@@ -3,7 +3,7 @@ import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, Gauge, List, ListItem, Page, PageContent } from 'framework7-react';
 import { filter, get, includes, isEmpty, keyBy, map, round } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { getConditions } from '../../../api';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
@@ -11,14 +11,27 @@ import { colorPrimary, itemTitleWithNoEllipsis } from '../../../styles';
 import { Skull } from '../../Icons';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
+import { db, FirebaseContext } from '../../Firebase';
+
+const diagnosisCollection = db.collection('diagnosis');
 
 export const Results = (props) => {
-	const [conditions, setConditions] = useState(props.conditions)
+  const firebase = useContext(FirebaseContext);
+  const [conditions, setConditions] = useState(props.conditions);
+  const [allDiagnosis, setAllDiagnosis] = useState([]);
 
 	useEffect(() => {
     RegisterBackButtonAction(props.f7router);
     fetchConditions();
+    getAllDiagnosis();
   }, []);
+
+  const getAllDiagnosis = async () => {
+    const snapshot = await firebase.getCollection(diagnosisCollection, firebase.authUserId);
+    const diagnosisData = snapshot.data();
+
+    if (diagnosisData) setAllDiagnosis(diagnosisData.diagnosis);
+  };
 
   const fetchConditions = async () => {
 		try {
@@ -45,7 +58,30 @@ export const Results = (props) => {
 
   const [bestMatchCondition, ...otherConditions] = conditions;
 
-  console.log(props.evidence, conditions)
+  const saveDiagnosis = async () => {
+    const newDiagnosis = {
+      conditions,
+      date: Date.now(),
+      symptoms: props.evidence,
+    };
+
+    try {
+      await firebase.setCollection(
+        diagnosisCollection,
+        firebase.authUserId,
+        { diagnosis: [...allDiagnosis, newDiagnosis] },
+      );
+
+      props.f7router.app.dialog.alert('Diagnosis saved!');
+      props.f7router.navigate(routePath.Home);
+    } catch (error) {
+      onError(error);
+    }
+  };
+
+  const onError = (error) => {
+    props.f7router.app.dialog.alert('An error occured: ', error.message);
+  };
 
 	return (
     <Page>
@@ -84,6 +120,7 @@ export const Results = (props) => {
             <Button
               fill
               href={routePath.Home}
+              onClick={() => saveDiagnosis()}
             >
               Save and quit diagnosis
             </Button>

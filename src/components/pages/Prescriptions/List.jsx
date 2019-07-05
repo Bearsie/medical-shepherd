@@ -4,30 +4,12 @@ import { mergeStyles, mergeStyleSets } from '@uifabric/merge-styles';
 import { Block, Button, Link, Page, Row } from 'framework7-react';
 import { groupBy, keys, map } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import { db, FirebaseContext } from '../../Firebase';
 import { Alarm, Bandage, Bootle, BrokenLeg, Clock, CrossedPills, Crutches, Doctor, Drip, Dropper, Head, HeartBeat, HospitalBed, InterviewCard, Lungs, Microscope, OpenPills, Pills, Plus, Scalpel, Search, Sex, Shield, Sign, Stethoscope, Stomach, Syringe, Tooth, Torch } from '../../Icons';
 import { Topbar } from '../../Topbar';
-
-const mockedPrescriptions = [
-  {
-    date: 1561492575569,
-    category: 'Psychiatry',
-    title: 'dr John Doe',
-    src: 'tesktjakiś',
-  },
-  {
-    date: 1561499667349,
-    category: 'Psychiatry',
-    title: 'hospital care'
-  },
-  {
-    date: 1561499167349,
-    category: 'Dentistry',
-    title: 'nutritional recommendations'
-  },
-];
 
 const iconMapper = {
   Allergology: Pills,
@@ -95,12 +77,30 @@ const styles = mergeStyleSets({
   },
 });
 
+const prescriptionsCollection = db.collection('prescriptions');
+
 export const List = (props) => {
+  const firebase = useContext(FirebaseContext);
+  const [prescriptions, setPrescriptions] = useState([]);
+  
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
   }, []);
 
-  const prescriptionsGroupedByCategory = groupBy(mockedPrescriptions, 'category');
+  useEffect(() => {
+    const getPrescriptionsCollection = async () => {
+      const snapshot = await firebase.getCollection(prescriptionsCollection, firebase.authUserId);
+      const prescriptionsData = snapshot.data();
+
+      if (prescriptionsData) {
+        setPrescriptions(prescriptionsData.prescriptions);
+      }
+    };
+
+    getPrescriptionsCollection();
+  }, []);
+
+  const prescriptionsGroupedByCategory = groupBy(prescriptions, 'category');
   const categories = keys(prescriptionsGroupedByCategory);
 
   return (
@@ -115,7 +115,7 @@ export const List = (props) => {
             key="Recent"
             routeProps={{
               category: 'Recent',
-              prescriptions: mockedPrescriptions,
+              prescriptions,
             }}
           >
               <div>Recent</div>
@@ -134,6 +134,7 @@ export const List = (props) => {
                 routeProps={{
                   category,
                   prescriptions: prescriptionsGroupedByCategory[category],
+                  allPrescriptions: prescriptions,
                 }}
               >
                   <div>{category}</div>
@@ -147,7 +148,7 @@ export const List = (props) => {
           fill
           href={routePath.PrescriptionAdd}
           routeProps={{
-            prescriptions: mockedPrescriptions,
+            prescriptions,
           }}
           raised
         >
