@@ -1,4 +1,3 @@
-import { Appointments } from './components/pages/Appointments';
 import { Interview, RiskFactors, SuggestedSymptoms, Symptoms, Results } from './components/pages/Diagnosis';
 import { History } from './components/pages/History';
 import { Home } from './components/pages/Home';
@@ -10,7 +9,6 @@ import { Register } from './components/pages/Register';
 import { Welcome } from './components/pages/Welcome';
 
 export const routePath = {
-  Appointments: '/appointments/',
   DiagnosisResults: '/diagnosis/results',
   Interview: '/diagnosis/interview/',
   History: '/history/',
@@ -51,10 +49,6 @@ export default [
   {
     path: routePath.Symptoms,
     component: Symptoms,
-  },
-  {
-    path: routePath.Appointments,
-    component: Appointments,
   },
   {
     path: routePath.Login,

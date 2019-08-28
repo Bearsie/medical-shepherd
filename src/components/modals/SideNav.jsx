@@ -1,24 +1,22 @@
 import { Dialogs } from '@ionic-native/dialogs';
-import { List, ListItem, Panel, Toggle } from 'framework7-react';
+import { List, ListItem, Panel } from 'framework7-react';
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import * as config from '../../config';
 import { routePath } from '../../routes';
 import { svgIcons } from '../../styles';
 import { auth, FirebaseContext } from '../Firebase';
-import { Alarm, Crutches, Doctor, Files, Head, Pills, Search } from '../Icons';
+import { Crutches, Files, Head, Pills, Search } from '../Icons';
 import { Topbar } from '../Topbar';
 
 const mainMenuItems = [
   { title: 'Profile', path: routePath.Profile, Icon: Head },
   { title: 'Diagnosis', path: routePath.Symptoms, Icon: Search },
   { title: 'Prescriptions', path: routePath.PrescriptionList, Icon: Pills },
-  { title: 'Appointments', path: routePath.Appointments, Icon: Doctor },
-  { title: 'History of diseases', path: routePath.History, Icon: Files },
+  { title: 'History', path: routePath.History, Icon: Files },
 ];
 
 export const SideNav = (props) => {
-  const [checked, toggleChecked] = useState(false);
   const firebase = useContext(FirebaseContext);
 
   const handleLogOut = async () => {
@@ -51,10 +49,6 @@ export const SideNav = (props) => {
           </ListItem>
         ))}
         <ListItem />
-        <ListItem link="#" title="Notifications" onClick={() => toggleChecked(!checked)} noChevron>
-          <Alarm className={svgIcons} slot="media" />
-          <Toggle slot="after" checked={checked} />
-        </ListItem>
         <ListItem
           key={routePath.Welcome}
           link={routePath.Welcome}
