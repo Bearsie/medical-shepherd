@@ -1,19 +1,16 @@
 import { Dialogs } from '@ionic-native/dialogs';
 import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, Gauge, List, ListItem, Page, PageContent } from 'framework7-react';
-import { filter, get, includes, isEmpty, keyBy, map, round } from 'lodash';
+import { filter, get, includes, isEmpty, keyBy, map, mapValues, round } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useContext } from 'react';
-import { getConditions } from '../../../api';
+import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../../styles';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { Skull } from '../../Icons';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
-import { db, FirebaseContext } from '../../Firebase';
-
-const diagnosisCollection = db.collection('diagnosis');
 
 export const Results = (props) => {
   const firebase = useContext(FirebaseContext);
@@ -27,18 +24,23 @@ export const Results = (props) => {
   }, []);
 
   const getAllDiagnosis = async () => {
-    const snapshot = await firebase.getCollection(diagnosisCollection, firebase.authUserId);
-    const diagnosisData = snapshot.data();
+    const diagnosisData = await firebase.getUserData(COLLECTIONS.Diagnosis, firebase.authUserId);
 
     if (diagnosisData) setAllDiagnosis(diagnosisData.diagnosis);
   };
 
+  const fetchSymptomsAndConditions = async () => {
+    const { symptoms, risks } = await firebase.getApiData();
+
+    return keyBy([...symptoms, ...risks], 'id');
+  };
+
   const fetchConditions = async () => {
 		try {
-      const { data } = await getConditions();
+      const { conditions } = await firebase.getApiData();
       const diagnosedConditionsIds = map(props.conditions, 'id');
       const diagnosedConditionsDetails = keyBy(filter(
-        data,
+        conditions,
         (conditionDetalis) => includes(diagnosedConditionsIds, conditionDetalis.id),
       ), 'id');
       const diagnosedConditionsWithDetails = map(
@@ -56,18 +58,22 @@ export const Results = (props) => {
 		Dialogs.prompt('Connection with server failed. Unable to load results.', 'Error');
   };
 
-  const [bestMatchCondition, ...otherConditions] = conditions;
+  const useToFillAnyMissingNames = (symptoms) => mapValues(props.evidence, (symptom) => 'common_name' in symptom ?
+    symptom : ({ ...symptom, common_name: symptoms[symptom.id].common_name })
+  );
 
   const saveDiagnosis = async () => {
-    const newDiagnosis = {
-      conditions,
-      date: Date.now(),
-      symptoms: props.evidence,
-    };
-
     try {
-      await firebase.setCollection(
-        diagnosisCollection,
+      const symptoms = await fetchSymptomsAndConditions();
+
+      const newDiagnosis = {
+        conditions,
+        date: Date.now(),
+        symptoms: useToFillAnyMissingNames(symptoms),
+      };
+
+      await firebase.setUserData(
+        COLLECTIONS.Diagnosis,
         firebase.authUserId,
         { diagnosis: [...allDiagnosis, newDiagnosis] },
       );
@@ -82,6 +88,8 @@ export const Results = (props) => {
   const onError = (error) => {
     props.f7router.app.dialog.alert('An error occured: ', error.message);
   };
+  
+  const [bestMatchCondition, ...otherConditions] = conditions;
 
 	return (
     <Page>
@@ -119,7 +127,6 @@ export const Results = (props) => {
           <Block>
             <Button
               fill
-              href={routePath.Home}
               onClick={() => saveDiagnosis()}
             >
               Save and quit diagnosis

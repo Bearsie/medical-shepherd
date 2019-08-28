@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { db, FirebaseContext } from '../../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { Alarm, Bandage, Bootle, BrokenLeg, Clock, CrossedPills, Crutches, Doctor, Drip, Dropper, Head, HeartBeat, HospitalBed, InterviewCard, Lungs, Microscope, OpenPills, Pills, Plus, Scalpel, Search, Sex, Shield, Sign, Stethoscope, Stomach, Syringe, Tooth, Torch } from '../../Icons';
 import { Topbar } from '../../Topbar';
 
@@ -77,8 +77,6 @@ const styles = mergeStyleSets({
   },
 });
 
-const prescriptionsCollection = db.collection('prescriptions');
-
 export const List = (props) => {
   const firebase = useContext(FirebaseContext);
   const [prescriptions, setPrescriptions] = useState([]);
@@ -89,8 +87,7 @@ export const List = (props) => {
 
   useEffect(() => {
     const getPrescriptionsCollection = async () => {
-      const snapshot = await firebase.getCollection(prescriptionsCollection, firebase.authUserId);
-      const prescriptionsData = snapshot.data();
+      const prescriptionsData = await firebase.getUserData(COLLECTIONS.Prescriptions, firebase.authUserId);
 
       if (prescriptionsData) {
         setPrescriptions(prescriptionsData.prescriptions);

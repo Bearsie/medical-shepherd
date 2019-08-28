@@ -1,13 +1,13 @@
 import { mergeStyles } from '@uifabric/merge-styles';
 import { Link, List, ListItem, PageContent, Sheet, Toolbar } from 'framework7-react';
-import { map, startCase } from 'lodash';
+import { map } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { itemTitleWithNoEllipsis } from '../styles';
 
 export const RadioSelect = ({ title, value, onChange, options }) => { 
   const [sheetOpened, setSheetOpened] = useState(false);
-  const [selectedOption, setSelectedOption] = useState('Unknown');
+  const [selectedOption, setSelectedOption] = useState(value);
 
   useEffect(() => {
     setSelectedOption(value);
@@ -23,7 +23,7 @@ export const RadioSelect = ({ title, value, onChange, options }) => {
           title={title}
         >
           <span className={mergeStyles({ maxWidth: '100px', textAlign: 'right' })} slot="after-title">
-            {startCase(selectedOption)}
+            {selectedOption}
           </span>
         </ListItem>
       </List>
@@ -31,10 +31,10 @@ export const RadioSelect = ({ title, value, onChange, options }) => {
       <Sheet
         className={`radio-select-${title}`}
         opened={sheetOpened}
-        onSheetClosed={() => {setSheetOpened(false)}}
+        onSheetClosed={() => { setSheetOpened(false) }}
       >
         <Toolbar>
-          <div className="left"></div>
+          <div className="left margin-left">{title}</div>
           <div className="right">
             <Link sheetClose>Close</Link>
           </div>

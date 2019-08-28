@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
-import { db, FirebaseContext } from '../../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { useValue } from '../../hooks';
 import { RadioSelect } from '../../RadioSelect';
 import { Topbar } from '../../Topbar';
@@ -42,8 +42,6 @@ const categories = [
   'Venereology',
 ];
 
-const prescriptionsCollection = db.collection('prescriptions');
-
 export const AddPrescription = (props) => {
   const firebase = useContext(FirebaseContext);
   const category = useValue('Other');
@@ -62,8 +60,8 @@ export const AddPrescription = (props) => {
     };
 
     try {
-      await firebase.updateCollection(
-        prescriptionsCollection,
+      await firebase.updateUserData(
+        COLLECTIONS.Prescriptions,
         firebase.authUserId,
         { prescriptions: [...props.prescriptions, newPrescription] },
       );

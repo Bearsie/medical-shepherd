@@ -4,18 +4,15 @@ import { Block, BlockTitle, Button, Chip, Page } from 'framework7-react';
 import { isEmpty, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
-import { getSymptoms } from '../../../api';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
-import { db, FirebaseContext } from '../../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { BrokenArm } from '../../Icons';
 import { MultiSelect } from '../../MultiSelect';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
-
-const profileCollection = db.collection('profile');
 
 export const Symptoms = (props) => {
   const firebase = useContext(FirebaseContext);
@@ -26,8 +23,7 @@ export const Symptoms = (props) => {
 
   useEffect(() => {
     const getProfileCollection = async () => {
-      const snapshot = await firebase.getCollection(profileCollection, firebase.authUserId);
-      const profileData = snapshot.data();
+      const profileData = await firebase.getUserData(COLLECTIONS.Profile, firebase.authUserId);
 
       if (profileData) {
         setProfileData(profileData);
@@ -52,8 +48,8 @@ export const Symptoms = (props) => {
 
   const fetchSymptoms = async () => {
     try {
-      const { data } = await getSymptoms();
-      setSymptoms(data);
+      const { symptoms } = await firebase.getApiData();
+      setSymptoms(symptoms);
     } catch(error) {
       showErrorMessage(error);
     }
@@ -77,7 +73,7 @@ export const Symptoms = (props) => {
       <Block noHairlines>
         {map(selectedSymptoms, (symptom) => (
           <Chip
-            text={symptom.name}
+            text={symptom.common_name}
             key={symptom.id}
             deleteable
             onDelete={() => { setSelectedSymptoms(omit(selectedSymptoms, symptom.id)); }}
@@ -112,7 +108,7 @@ export const Symptoms = (props) => {
   
             setSelectedSymptoms({
               ...selectedSymptoms,
-              [symptom.id]: symptom,
+              [symptom.id]: { ...symptom, choice_id: 'present' },
             })
           }}
           selectedItems={selectedSymptoms}

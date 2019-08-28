@@ -1,6 +1,6 @@
 import { Dialogs } from '@ionic-native/dialogs';
 import { Block, Button, List, ListItem, Page } from 'framework7-react';
-import { keyBy, keys, map, omit } from 'lodash';
+import { keyBy, map, mapValues } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { getSuggestedSymptoms } from '../../../api';
@@ -9,15 +9,15 @@ import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction
 import { itemTitleWithNoEllipsis } from '../../../styles';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
+import { getEvidence } from './utils';
 
 export const SuggestedSymptoms = (props) => {
-	const [symptoms, setSymptoms] = useState([]);
-	const [selectedSymptoms, setSelectedSymptoms] = useState({});
+	const [suggestedSymptoms, setSuggestedSymptoms] = useState({});
 
 	useEffect(() => {
 		RegisterBackButtonAction(props.f7router);
 		fetchSymptoms();
-	}, []);
+  }, []);
 
 	const showErrorMessage = (error) => {
 		console.log(error);
@@ -25,13 +25,11 @@ export const SuggestedSymptoms = (props) => {
 	};
 
 	const fetchSymptoms = async () => {
+    const evidence = getEvidence(props.selectedSymptoms);
+
 		try {
-			const { data } = await getSuggestedSymptoms(
-        keys(props.selected),
-        props.age,
-        props.sex,
-      );
-			setSymptoms(data);
+      const { data } = await getSuggestedSymptoms(evidence, props.age, props.sex);
+			setSuggestedSymptoms(keyBy(data, 'id'));
 		} catch(error) {
 			showErrorMessage(error);
 		}
@@ -50,24 +48,19 @@ export const SuggestedSymptoms = (props) => {
         </div>
       </Block>
       <List>
-        {map(symptoms, (symptom) => (
+        {map(suggestedSymptoms, (symptom) => (
           <ListItem
             className={itemTitleWithNoEllipsis}
             checkbox
-            checked={!!selectedSymptoms[symptom.id]}
+            checked={!!symptom.selected}
             key={symptom.id}
-            title={symptom.name}
+            title={symptom.common_name}
             onChange={
               () => {
-                if (selectedSymptoms[symptom.id]) {
-                  setSelectedSymptoms(omit(selectedSymptoms, symptom.id));
-                  return;
-                }
-
-                setSelectedSymptoms({
-                  ...selectedSymptoms,
-                  [symptom.id]: symptom,
-                })
+                setSuggestedSymptoms({
+                  ...suggestedSymptoms,
+                  [symptom.id]: { ...symptom, selected: !symptom.selected },
+                });
               }
             }
           />
@@ -80,9 +73,12 @@ export const SuggestedSymptoms = (props) => {
           routeProps={{
             age: props.age,
             sex: props.sex,
-            evidence: {
-              ...keyBy(selectedSymptoms, 'id'),
-              ...props.selected,
+            selectedSymptoms: {
+              ...mapValues(suggestedSymptoms, ({ selected, ...symptom }) => ({
+                ...symptom,
+                choice_id: selected ? 'present' : 'absent',
+              })),
+              ...props.selectedSymptoms,
             },
           }}
         >
@@ -96,6 +92,6 @@ export const SuggestedSymptoms = (props) => {
 SuggestedSymptoms.propTypes = {
   f7router: PropTypes.object,
   age: PropTypes.number,
-  selected: PropTypes.object,
+  selectedSymptoms: PropTypes.object,
   sex: PropTypes.string,
 };

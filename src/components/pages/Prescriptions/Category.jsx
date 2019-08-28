@@ -10,10 +10,8 @@ import { Files } from '../../Icons';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
-import { FirebaseContext, db } from '../../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { routePath } from '../../../routes';
-
-const prescriptionsCollection = db.collection('prescriptions');
 
 export const Category = (props) => {
   const firebase = useContext(FirebaseContext);
@@ -35,8 +33,8 @@ export const Category = (props) => {
 
   const handleSaveChanges = async () => {
     try {
-      await firebase.updateCollection(
-        prescriptionsCollection,
+      await firebase.updateUserData(
+        COLLECTIONS.Prescriptions,
         firebase.authUserId,
         { prescriptions: allPrescriptions },
       );

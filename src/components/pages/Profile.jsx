@@ -1,105 +1,83 @@
-import { Block, BlockTitle, Button, Page, PageContent } from 'framework7-react';
-import { keyBy, map, reduce, values } from 'lodash';
+import { Page } from 'framework7-react';
+import { keyBy, map, values } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { routePath } from '../../routes';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
-import { db, FirebaseContext } from '../Firebase';
-import { useValue } from '../hooks';
-import { RadioSelect } from '../RadioSelect';
-import { RangeSelect } from '../RangeSelect';
+import { COLLECTIONS, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
+import { ProfileData } from './ProfileData';
 
 const commonRisks = [
-  { name: 'Aortic aneurysm', id: "p_182" },
-  { name: 'Asthma', id: "p_167" },
-  { name: 'Atherosclerosis', id: "p_173" },
-  { name: 'Chronic obstructive pulmonary disease', id: "p_164" },
-  { name: 'Contact lenses', id: "p_139" },
-  { name: 'Coronary disease', id: "p_78" },
-  { name: 'Diabetes', id: 'p_8' },
-  { name: 'Frequent alcohol consumption', id: 'p_38' },
-  { name: 'Hemophilia', id: "p_202" },
-  { name: 'High cholesterol', id: 'p_10' },
-  { name: 'Hypertension', id: 'p_9' },
-  { name: 'Peripheral vascular disease', id: "p_183" },
-  { name: 'Smoking', id: 'p_28' },
+  { common_name: 'Aortic aneurysm', id: "p_182" },
+  { common_name: 'Asthma', id: "p_167" },
+  { common_name: 'Atherosclerosis', id: "p_173" },
+  { common_name: 'Chronic obstructive pulmonary disease', id: "p_164" },
+  { common_name: 'Contact lenses', id: "p_139" },
+  { common_name: 'Coronary disease', id: "p_78" },
+  { common_name: 'Diabetes', id: 'p_8' },
+  { common_name: 'Frequent alcohol consumption', id: 'p_38' },
+  { common_name: 'Hemophilia', id: "p_202" },
+  { common_name: 'High cholesterol', id: 'p_10' },
+  { common_name: 'Hypertension', id: 'p_9' },
+  { common_name: 'Peripheral vascular disease', id: "p_183" },
+  { common_name: 'Smoking', id: 'p_28' },
 ];
-
-const getChoiceName = (choiceId) => choiceId === 'present' ? 'Yes'
-  : choiceId === 'absent' ? 'No'
-  : 'Unknown';
-
-const profileCollection = db.collection('profile');
 
 export const Profile = (props) => {
   const firebase = useContext(FirebaseContext);
-  const age = useValue(18);
-  const weight = useValue(30);
-  const height = useValue(130);
-  const sex = useValue('Male');
-  const place = useValue('Europe', 'p_19');
-  const risks = reduce(commonRisks, (currentRisks, risk) => ({
-    ...currentRisks,
-    [risk.name]: useValue('Unknown', risk.id, risk.name),
-  }), {});
-
-  useEffect(() => {
-    const getProfileCollection = async () => {
-      const snapshot = await firebase.getCollection(profileCollection, firebase.authUserId);
-      const profileData = snapshot.data();
-
-      if(profileData) {
-        age.onChange(profileData.age);
-        weight.onChange(profileData.weight);
-        height.onChange(profileData.height);
-        sex.onChange(profileData.sex);
-
-        const dictionaryRisks = keyBy(profileData.commonRisks, 'id');
-        place.onChange(dictionaryRisks[place.id].name);
-        
-        for (let riskName in risks) {
-          const risk = risks[riskName];
-          risk.onChange(getChoiceName(dictionaryRisks[risk.id].choice_id));
-        }
-      }
-    };
-
-    getProfileCollection();
-  }, []);
+  const [profileData, setProfileData] = useState(undefined);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
   }, []);
 
-  const Save = async () => {
-    const payload = {
-      sex: sex.value,
-      age: age.value,
-      weight: weight.value,
-      height: height.value,
-      commonRisks: [
-        {
-          id: place.id,
-          name: place.value,
-          choice_id: 'present',
-          initial: true,
-        },
-        ...map([...values(risks)], (risk) => ({
-          id: risk.id,
-          name: risk.name,
-          choice_id: risk.value,
-          initial: true,
-        })),
-      ],
+  useEffect(() => {
+    const getProfileData = async () => {
+      props.f7router.app.preloader.show();
+      try {
+        const profileData = await firebase.getUserData(COLLECTIONS.Profile, firebase.authUserId);
+
+        if (profileData) {
+          const dictionaryRisks = keyBy(profileData.commonRisks, 'id');
+          const { 'p_19': placeOfResidence, ...restCommonRisks } = dictionaryRisks;
+          
+          setProfileData({
+            age: profileData.age,
+            weight: profileData.weight,
+            height: profileData.height,
+            sex: profileData.sex,
+            place: placeOfResidence,
+            risks: values(restCommonRisks),
+          });
+        } else {
+          setProfileData({
+            age: 18,
+            weight: 30,
+            height: 130,
+            sex: 'male',
+            place: {
+              choice_id: "present",
+              id: "p_19",
+              initial: true,
+              common_name: 'Europe',
+            },
+            risks: map(commonRisks, (risk) => ({
+              ...risk,
+              initial: true,
+              choice_id: 'unknown',
+            })),
+          });
+        }
+      } catch (error) {
+        onError(error);
+      }
+
+      props.f7router.app.preloader.hide();
     };
 
-    try {
-      await firebase.setCollection(profileCollection, firebase.authUserId, payload);
-      props.f7router.app.dialog.alert('Changes saved!');
-    } catch (error) {
-      onError(error);
-    }
-  };
+    getProfileData();
+  }, []);
 
   const onError = (error) => {
     props.f7router.app.dialog.alert('An error occured: ', error.message);
@@ -107,42 +85,10 @@ export const Profile = (props) => {
 
   return (
     <Page>
-      <Topbar title="Profile" />
-      <PageContent className="no-padding">
-        <RangeSelect title="Age" {...age} range={[18, 122]} />
-        <RangeSelect title="Weight" {...weight} range={[30, 300]} />
-        <RangeSelect title="Height" {...height} range={[130, 220]} />
-        <RadioSelect title="Sex" {...sex} options={['Male', 'Female']} />
-        <RadioSelect
-          title="Place of Residence"
-          {...place}
-          options={[
-            'United States or Canada',
-            'Latin or South America',
-            'Europe',
-            'Northern Africa',
-            'Central Africa',
-            'Southern Africa',
-            'Australia and Oceania',
-            'Russia, Kazakhstan or Mongolia',
-            'Southwestern Asia',
-          ]}
-        />
-        <BlockTitle className="text-color-primary">Common risks:</BlockTitle>
-        {map(commonRisks, (risk) => (
-          <RadioSelect
-            key={risk.id}
-            title={risk.name}
-            {...risks[risk.name]}
-            options={['Yes', 'No', 'Unknown']}
-          />
-        ))}
-        <Block>
-          <Button large fill onClick={Save}>
-            Apply
-          </Button>
-        </Block>
-      </PageContent>
+      <Topbar title="Profile" linkPath={routePath.Home} />
+      {profileData &&
+        <ProfileData profileData={profileData} dialog={props.f7router.app.dialog} />
+      }
     </Page>
   );
 };

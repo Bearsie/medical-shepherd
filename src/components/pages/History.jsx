@@ -7,7 +7,7 @@ import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../styles';
 import { Files } from '../Icons';
 import { Topbar } from '../Topbar';
-import { FirebaseContext, db } from '../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../Firebase';
 import { routePath } from '../../routes';
 
 const dateOptions = {
@@ -18,8 +18,6 @@ const dateOptions = {
   hour: 'numeric',
   minutes: 'numeric',
 };
-
-const diagnosisCollection = db.collection('diagnosis');
 
 export const History = (props) => {
   const firebase = useContext(FirebaseContext);
@@ -34,8 +32,7 @@ export const History = (props) => {
   }, []);
 
   const getAllDiagnosis = async () => {
-    const snapshot = await firebase.getCollection(diagnosisCollection, firebase.authUserId);
-    const diagnosisData = snapshot.data();
+    const diagnosisData = await firebase.getUserData(COLLECTIONS.Diagnosis, firebase.authUserId);
 
     if (diagnosisData) {
       const orderedResults = orderBy(diagnosisData.diagnosis, 'date', 'desc');
@@ -52,8 +49,8 @@ export const History = (props) => {
 
   const handleSaveChanges = async () => {
     try {
-      await firebase.updateCollection(
-        diagnosisCollection,
+      await firebase.updateUserData(
+        COLLECTIONS.Diagnosis,
         firebase.authUserId,
         { diagnosis: allDiagnosis },
       );
@@ -72,7 +69,7 @@ export const History = (props) => {
 
   return (
     <Page>
-      <Topbar title="History of diseases" linkPath={someRecordWereDeleted ? routePath.Home : undefined} />
+      <Topbar title="History of diseases" linkPath={routePath.Home} />
       <PageContent className="no-padding-top">
         {isEmpty(records) && (
           <Block className="text-align-center">

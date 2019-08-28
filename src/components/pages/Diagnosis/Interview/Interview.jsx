@@ -1,7 +1,7 @@
 import { Dialogs } from '@ionic-native/dialogs';
 import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, List, Page } from 'framework7-react';
-import { get, isEmpty, keyBy, map, values } from 'lodash';
+import { get, isEmpty, keyBy, map, values, pick } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { getDiagnosis } from '../../../../api';
@@ -13,12 +13,13 @@ import { UnderlinedHeader } from '../../../UnderlinedHeader';
 import { MultipleGroupQuestion } from './MultipleGroupQuestion';
 import { SingleGroupQuestion } from './SingleGroupQuestion';
 import { SingleQuestion } from './SingleQuestion';
+import { getEvidence } from '../utils';
 
 export const Interview = (props) => {
 	const [interview, setInterview] = useState({});
   const [selectedSymptoms, setSelectedSymptoms] = useState({});
   const [step, setStep] = useState(0);
-  const [evidence, setEvidence] = useState(props.evidence);
+  const [evidence, setEvidence] = useState(props.selectedSymptoms);
   const [shouldStopInterview, setShouldStopInterview] = useState(false);
 
 	useEffect(() => {
@@ -49,12 +50,10 @@ export const Interview = (props) => {
 	};
 
 	const fetchDiagnosis = async () => {
+    const evidence = getEvidence(props.selectedSymptoms);
+
 		try {
-			const { data } = await getDiagnosis(
-        values(evidence),
-        props.age,
-        props.sex,
-      );
+			const { data } = await getDiagnosis(evidence, props.age, props.sex);
       setInterview(data);
       setShouldStopInterview(data.question.should_stop);
 		} catch(error) {
@@ -82,7 +81,7 @@ export const Interview = (props) => {
       </BlockTitle>
       <List>
         {map(get(interview, 'question.items'), (symptom) => (
-          <ul>
+          <ul key={symptom.id}>
               {
                 questionType === 'single' ?
                   <SingleQuestion {...{ symptom, selectedSymptoms, setSelectedSymptoms }} />
@@ -121,6 +120,6 @@ export const Interview = (props) => {
 Interview.propTypes = {
   f7router: PropTypes.object,
   age: PropTypes.number,
-  evidence: PropTypes.object,
+  selectedSymptoms: PropTypes.object,
   sex: PropTypes.string,
 };

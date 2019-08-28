@@ -3,12 +3,12 @@ import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, Chip, List, Page } from 'framework7-react';
 import { isEmpty, keyBy, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState } from 'react';
-import { getRiskFactors } from '../../../api';
+import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
 import { Divider } from '../../Divider';
+import { FirebaseContext } from '../../Firebase';
 import { MultiSelect } from '../../MultiSelect';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
@@ -16,6 +16,7 @@ import { UnderlinedHeader } from '../../UnderlinedHeader';
 import { getRiskFactorsFromProfile, getRiskFactorsToSelectFrom } from './utils';
 
 export const RiskFactors = (props) => {
+  const firebase = useContext(FirebaseContext);
   const [riskFactors, setRiskFactors] = useState([]);
   const [selectedRiskFactors, setSelectedRiskFactors] = useState({});
 
@@ -31,8 +32,14 @@ export const RiskFactors = (props) => {
 
   const fetchRiskFactors = async () => {
     try {
-      const { data } = await getRiskFactors();
-      setRiskFactors(getRiskFactorsToSelectFrom(data, props.profileData.sex, props.profileData.commonRisks));
+      const { risks } = await firebase.getApiData();
+      setRiskFactors(
+        getRiskFactorsToSelectFrom(
+          risks,
+          props.profileData.sex,
+          props.profileData.commonRisks,
+        )
+      );
     } catch(error) {
       showErrorMessage(error);
     }
@@ -48,7 +55,7 @@ export const RiskFactors = (props) => {
         <div className="margin-bottom text-align-justify">Based on your profile data we identified following risk factors:</div>
         {map(commonRisksFromProfile, (commonRisk) => (
           <Chip
-            text={commonRisk.name}
+            text={commonRisk.common_name}
             key={commonRisk.id}
             color={commonRisk.choice_id === 'absent' ? 'red' : undefined}
             className={mergeStyles([chipWithNoEllipsis, 'bg-color-primary'])}
@@ -61,7 +68,7 @@ export const RiskFactors = (props) => {
       <Block noHairlines>
         {map(selectedRiskFactors, (riskFactor) => (
           <Chip
-            text={riskFactor.name}
+            text={riskFactor.common_name}
             key={riskFactor.id}
             deleteable
             onDelete={() => { setSelectedRiskFactors(omit(selectedRiskFactors, riskFactor.id)); }}
@@ -84,7 +91,7 @@ export const RiskFactors = (props) => {
             routeProps={{
               age: props.profileData.age,
               sex: props.profileData.sex,
-              selected: {
+              selectedSymptoms: {
                 ...keyBy(commonRisksFromProfile, 'id'),
                 ...selectedRiskFactors,
                 ...props.selectedSymptoms,
@@ -110,7 +117,7 @@ export const RiskFactors = (props) => {
   
             setSelectedRiskFactors({
               ...selectedRiskFactors,
-              [riskFactor.id]: riskFactor,
+              [riskFactor.id]: { ...riskFactor, choice_id: 'present' },
             })
           }}
           selectedItems={selectedRiskFactors}

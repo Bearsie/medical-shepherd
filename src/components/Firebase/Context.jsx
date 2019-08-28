@@ -1,28 +1,45 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+import { db, COLLECTIONS } from './firebase';
 
 export const FirebaseContext = React.createContext({
   authUserId: '',
   setAuthUserId: () => {},
-  getCollection: () => {},
-  setCollection: () => {},
-  updateCollection: () => {},
+  getApiData: () => {},
+  getUserData: () => {},
+  setUserData: () => {},
+  updateUserData: () => {},
 });
 
 export const FirebaseProvider = (props) => {
   const [authUserId, setAuthUserId] = useState('');
 
-  const getCollection = (collection, userId) => collection.doc(userId).get();
-  const setCollection = (collection, userId, payload) => collection.doc(userId).set(payload);
-  const updateCollection = (collection, userId, payload) => collection.doc(userId).update(payload);
+  const getApiData = async () => {
+    const snapshot = await db.collection(COLLECTIONS.Api).get();
+
+    return snapshot.docs[0].data();
+  };
+
+  const getUserData = async (collectionName, userId) => {
+    const snapshot = await db.collection(collectionName).doc(userId).get();
+
+    return snapshot.data();
+  }
+
+  const setUserData = (collectionName, userId, payload) =>
+    db.collection(collectionName).doc(userId).set(payload);
+
+  const updateUserData = (collectionName, userId, payload) =>
+    db.collection(collectionName).doc(userId).update(payload);
 
   return (
     <FirebaseContext.Provider value={{
       authUserId,
       setAuthUserId,
-      getCollection,
-      setCollection,
-      updateCollection,
+      getApiData,
+      getUserData,
+      setUserData,
+      updateUserData,
     }}>
       {props.children}
     </FirebaseContext.Provider>

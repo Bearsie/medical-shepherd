@@ -1,18 +1,12 @@
 import { useState } from 'react';
 
-export const useValue = (initialSelectValue, initialSelectId = undefined, initialName = undefined) => {
-  const [value, setValue] = useState(initialSelectValue);
-  const [id, setId] = useState(initialSelectId);
-  const [name, setName] = useState(initialName);
+export const useValue = (initialValue, initialData = {}) => {
+  const [value, setValue] = useState(initialValue);
+  const [data] = useState(initialData);
 
-  const handleChange = (value, id) => {
+  const handleChange = (value) => {
     setValue(value);
-    if (id) setId(id);
-    if (name) setName(name);
   };
 
-  const objectId = id ? { id } : {};
-  const objectName = name ? { name } : {};
-
-  return { ...objectId, ...objectName, value, onChange: handleChange };
+  return { value, onChange: handleChange, ...data };
 };

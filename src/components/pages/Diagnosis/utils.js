@@ -5,42 +5,44 @@ const getBmiRiskFactors = (height, weight) => {
   
     if (bmi > 30) {
       return [
-        { id: "p_6", name: 'BMI below 19', choice_id: "absent", initial: true},
-        { id: "p_7", name: 'BMI above 30', choice_id: "present", initial: true },
+        { id: "p_6", common_name: 'BMI below 19', choice_id: "absent", initial: true},
+        { id: "p_7", common_name: 'BMI above 30', choice_id: "present", initial: true },
      ];
     }
   
     if (bmi < 19) {
       return [
-        { id: "p_6", name: 'BMI below 19', choice_id: "present", initial: true },
-        { id: "p_7", name: 'BMI above 30', choice_id: "absent", initial: true},
+        { id: "p_6", common_name: 'BMI below 19', choice_id: "present", initial: true },
+        { id: "p_7", common_name: 'BMI above 30', choice_id: "absent", initial: true},
      ];
     }
   
     return [
-      { id: "p_6", name: 'BMI below 19', choice_id: "absent", initial: true},
-      { id: "p_7", name: 'BMI above 30', choice_id: "absent", initial: true},
+      { id: "p_6", common_name: 'BMI below 19', choice_id: "absent", initial: true},
+      { id: "p_7", common_name: 'BMI above 30', choice_id: "absent", initial: true},
     ];
   };
   
 const getAgeRiskFactors = (age) => {
     if (age < 18) {
       return [
-         { id: "p_65", name: 'Age < 18', choice_id: "present", initial: true},
-         { id: "p_3", name: 'Age above 40', choice_id: "absent", initial: true},
-         { id: "p_4", name: 'Age 45-55', choice_id: "absent", initial: true},
-         { id: "p_5", name: 'Age above 60', choice_id: "absent", initial: true},
+         { id: "p_65", common_name: 'Age < 18', choice_id: "present", initial: true},
+         { id: "p_3", common_name: 'Age above 40', choice_id: "absent", initial: true},
+         { id: "p_4", common_name: 'Age 45-55', choice_id: "absent", initial: true},
+         { id: "p_5", common_name: 'Age above 60', choice_id: "absent", initial: true},
       ];
     }
    
     if (age >= 18 && age <= 40) {
       return [
-         { id: "p_65", name: 'Age < 18', choice_id: "absent", initial: true},
-         { id: "p_3", name: 'Age above 40', choice_id: "absent", initial: true},
-         { id: "p_4", name: 'Age 45-55', choice_id: "absent", initial: true},
-         { id: "p_5", name: 'Age above 60', choice_id: "absent", initial: true},
+         { id: "p_65", common_name: 'Age < 18', choice_id: "absent", initial: true},
+         { id: "p_3", common_name: 'Age above 40', choice_id: "absent", initial: true},
+         { id: "p_4", common_name: 'Age 45-55', choice_id: "absent", initial: true},
+         { id: "p_5", common_name: 'Age above 60', choice_id: "absent", initial: true},
       ];
     }
+
+    return [];
   };
   
   export const getRiskFactorsToSelectFrom = (riskFactors, sex, commonRisks) => {
@@ -65,4 +67,11 @@ const getAgeRiskFactors = (age) => {
     ...getBmiRiskFactors(profileData.height, profileData.weight),
     ...getAgeRiskFactors(profileData.age),
   ]);
+
+  export const getEvidence = (symptoms) => map(symptoms, (symptom) => ({
+    id: symptom.id,
+    choice_id: symptom.choice_id,
+    initial: !!symptom.initial,
+    related: !!symptom.related,
+  }));
   
