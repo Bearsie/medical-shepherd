@@ -47,7 +47,7 @@ export const RadioSelect = ({ title, value, onChange, options }) => {
                 checked={option === selectedOption}
                 key={option}
                 title={option}
-                onChange={() => onChange(option)}
+                onChange={() => { onChange(option) }}
               />
             ))}
           </List>

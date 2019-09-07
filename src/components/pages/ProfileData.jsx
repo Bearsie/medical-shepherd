@@ -1,7 +1,7 @@
 import { Block, BlockTitle, Button, PageContent } from 'framework7-react';
 import { lowerCase, map, omit, startCase, values } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, { useContext } from 'react';
 import { COLLECTIONS, FirebaseContext } from '../Firebase';
 import { useValue } from '../hooks';
 import { RadioSelect } from '../RadioSelect';
@@ -29,16 +29,6 @@ export const ProfileData = (props) => {
   const risks = map(props.profileData.risks, (risk) =>
     useValue(riskChoices[risk.choice_id], omit(risk, 'choice_id')),
   );
-  const [unsavedChanges, setUnsavedChanges] = useState(false);
-  const didMountRef = useRef(false);
-
-  useEffect(() => {
-    if (didMountRef.current) {
-      setUnsavedChanges(true);
-    } else {
-      didMountRef.current = true;
-    }
-  }, [age, weight, height, sex, place, ...risks]);
 
   const save = async () => {
     const payload = {
@@ -61,8 +51,6 @@ export const ProfileData = (props) => {
     try {
       await firebase.setUserData(COLLECTIONS.Profile, firebase.authUserId, payload);
       props.dialog.alert('Changes saved!');
-      setUnsavedChanges(false);
-      didMountRef.current = false;
     } catch (error) {
       onError(error);
     }
@@ -74,13 +62,11 @@ export const ProfileData = (props) => {
 
   return (
     <PageContent className="no-padding">
-      {unsavedChanges &&
-        <Block>
-          <Button large fill onClick={save}>
-            Save changes
-          </Button>
-        </Block>
-      }
+      <Block>
+        <Button large fill onClick={save}>
+          Save changes
+        </Button>
+      </Block>
       <RangeSelect title="Age" {...age} range={[18, 122]} />
       <RangeSelect title="Weight" {...weight} range={[30, 300]} />
       <RangeSelect title="Height" {...height} range={[130, 220]} />
