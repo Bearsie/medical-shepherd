@@ -1,18 +1,14 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { routePath } from '../../routes';
 import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
 
 export const Login = (props) => {
-  const [userName, setUserName] = useState('wojtek.niedzwiedz@gmail.com');
-  const [password, setPassword] = useState('baibai1234');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
-
-  useEffect(() => {
-    signIn();
-  }, []);
 
   const signIn = async () => {
     try {
