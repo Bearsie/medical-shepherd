@@ -1,12 +1,12 @@
 import { Dialogs } from '@ionic-native/dialogs';
 import { mergeStyleSets } from '@uifabric/merge-styles';
 import { Block, Button, Col, Navbar, NavTitle, Page, PageContent, Row } from 'framework7-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import welcomeImage from '../../assets/img/welcoming-shepherd.jpg';
 import * as config from '../../config';
+import { routePath } from '../../routes';
 import Platform from '../../services/Platform';
 import { colorSecondary } from '../../styles';
-import { routePath } from '../../routes';
-import welcomeImage from '../../assets/img/welcoming-shepherd.jpg';
 
 const styles = mergeStyleSets({
   navbar: {
@@ -31,6 +31,8 @@ const styles = mergeStyleSets({
 });
 
 export const Welcome = () => {
+  const [isBackroundImageLoaded, setIsBackgroundImageLoaded] = useState(false);
+
   useEffect(() => {
     Platform.registerBackButtonAction((event) => {
       event.preventDefault();
@@ -46,7 +48,13 @@ export const Welcome = () => {
     }, 101);
   }, []);
 
-  return (
+  useEffect(() => {
+    const backgroundImage = new Image();
+    backgroundImage.onload = () => { setIsBackgroundImageLoaded(true) };
+    backgroundImage.src = welcomeImage;
+  }, []);
+
+  return isBackroundImageLoaded && (
     <Page className={styles.page}>
       <Navbar noShadow noHairline className={styles.navbar}>
         <NavTitle className={styles.title}>{config.name}</NavTitle>

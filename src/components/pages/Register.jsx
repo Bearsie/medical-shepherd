@@ -1,25 +1,14 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
 import React, { useContext, useState } from 'react';
-import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import { routePath } from '../../routes';
-import { Divider } from "../Divider";
 import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
-
-const socialMediaButtonStyles = {
-  height: '48px',
-  fontFamily: 'inherit',
-  fontSize: '14px',
-  textTransform: 'uppercase',
-};
 
 export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
-  const [isSocial, setSocial] = useState(props.social);
-
 
   const register = async () => {
     try {
@@ -35,10 +24,6 @@ export const Register = (props) => {
     props.f7router.app.dialog.alert(error.message, () => {
       console.log(error);
     });
-  };
-
-  const registerSocial = () => {
-    setSocial(true);
   };
 
   return (
@@ -72,13 +57,6 @@ export const Register = (props) => {
         />
         <Block>
           <Button large fill onClick={register}>Sign up</Button>
-          {!props.social && !isSocial &&
-            <>
-              <Divider text="or" color="lightGray" className="padding-top padding-bottom" />
-              <GoogleLoginButton text="Sign up with google" onClick={registerSocial} style={socialMediaButtonStyles} />
-              <FacebookLoginButton text="SIgn up with facebook" onClick={registerSocial} style={socialMediaButtonStyles} />
-            </>
-          }
         </Block>
       </List>
     </Page>
