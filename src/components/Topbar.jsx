@@ -14,9 +14,9 @@ const styles = mergeStyleSets({
   },
 });
 
-export const Topbar = ({ iconName = faChevronLeft, linkPath, title ='', panelOpen, panelClose }) => (
+export const Topbar = ({ iconName = faChevronLeft, title ='', linkProps = { back: true } }) => (
   <Navbar noShadow noHairline className={styles.bar} >
-    <Link href={linkPath} back={!linkPath && !panelOpen && !panelClose} panelOpen={panelOpen} panelClose={panelClose}>
+    <Link {...linkProps}>
         <FontAwesomeIcon icon={iconName} />
     </Link>
     <NavTitle className={styles.title}>{title}</NavTitle>
@@ -26,8 +26,6 @@ export const Topbar = ({ iconName = faChevronLeft, linkPath, title ='', panelOpe
 Topbar.propTypes = {
   children: PropTypes.object,
   iconName: PropTypes.object,
-  linkPath: PropTypes.string,
   title: PropTypes.string,
-  panelClose: PropTypes.bool,
-  panelOpen: PropTypes.string,
+  linkProps: PropTypes.object,
 };

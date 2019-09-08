@@ -69,7 +69,7 @@ export const History = (props) => {
 
   return (
     <Page>
-      <Topbar title="History of diseases" linkPath={routePath.Home} />
+      <Topbar title="History of diseases" linkProps={{ href: routePath.Home }} />
       <PageContent className="no-padding-top">
         {isEmpty(records) && (
           <Block className="text-align-center">

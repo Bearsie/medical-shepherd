@@ -85,7 +85,7 @@ export const Profile = (props) => {
 
   return (
     <Page>
-      <Topbar title="Profile" linkPath={routePath.Home} />
+      <Topbar title="Profile" />
       {profileData &&
         <ProfileData profileData={profileData} dialog={props.f7router.app.dialog} />
       }

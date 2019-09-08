@@ -8,7 +8,7 @@ import { routePath } from '../../../routes';
 import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
 import { chipWithNoEllipsis } from '../../../styles';
 import { Divider } from '../../Divider';
-import { FirebaseContext } from '../../Firebase';
+import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { MultiSelect } from '../../MultiSelect';
 import { PagePopup } from '../../PagePopup';
 import { Topbar } from '../../Topbar';
@@ -18,11 +18,30 @@ import { getRiskFactorsFromProfile, getRiskFactorsToSelectFrom } from './utils';
 export const RiskFactors = (props) => {
   const firebase = useContext(FirebaseContext);
   const [riskFactors, setRiskFactors] = useState([]);
-  const [selectedRiskFactors, setSelectedRiskFactors] = useState({});
+  const [selectedRiskFactors, setSelectedRiskFactors] = useState(props.selectedRiskFactors || {});
+  const [profileData, setProfileData] = useState(props.profileData || {});
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
-    fetchRiskFactors();
+  }, []);
+
+  useEffect(() => {
+    const getProfileCollection = async () => {
+      if (isEmpty(profileData)) {
+        const fetchedProfileData = await firebase.getUserData(COLLECTIONS.Profile, firebase.authUserId);
+        
+        if (fetchedProfileData) {
+          setProfileData(fetchedProfileData);
+        } else {
+          props.f7router.app.dialog.alert('To get diagnosis You need to fill your profile data! Go to Profile tab!');
+          return;
+        }
+      }
+
+      fetchRiskFactors();
+    };
+
+    getProfileCollection();
   }, []);
 
   const showErrorMessage = (error) => {
@@ -36,8 +55,8 @@ export const RiskFactors = (props) => {
       setRiskFactors(
         getRiskFactorsToSelectFrom(
           risks,
-          props.profileData.sex,
-          props.profileData.commonRisks,
+          profileData.sex,
+          profileData.commonRisks,
         )
       );
     } catch(error) {
@@ -45,11 +64,20 @@ export const RiskFactors = (props) => {
     }
   };
 
-  const commonRisksFromProfile = getRiskFactorsFromProfile(props.profileData);
+  const commonRisksFromProfile = getRiskFactorsFromProfile(profileData);
 
   return (
     <Page>
-      <Topbar title="Diagnosis" />
+      <Topbar
+        title="Diagnosis"
+        linkProps={{
+          href: routePath.Symptoms,
+          routeProps: {
+            selectedSymptoms: props.selectedSymptoms,
+            profileData,
+          },
+        }}
+      />
       <UnderlinedHeader title="Risk factors" />
       <Block noHairlines className="no-margin-top no-margin-bottom">
         <div className="margin-bottom text-align-justify">Based on your profile data we identified following risk factors:</div>
@@ -89,13 +117,11 @@ export const RiskFactors = (props) => {
             fill
             href={routePath.SuggestedSymptoms}
             routeProps={{
-              age: props.profileData.age,
-              sex: props.profileData.sex,
-              selectedSymptoms: {
-                ...keyBy(commonRisksFromProfile, 'id'),
-                ...selectedRiskFactors,
-                ...props.selectedSymptoms,
-              },
+              age: profileData.age,
+              sex: profileData.sex,
+              commonRisksFromProfile: keyBy(commonRisksFromProfile, 'id'),
+              selectedRiskFactors,
+              selectedSymptoms: props.selectedSymptoms,
             }}
           >
             Continue
@@ -131,4 +157,5 @@ RiskFactors.propTypes = {
   f7router: PropTypes.object,
   profileData: PropTypes.object,
   selectedSymptoms: PropTypes.object,
+  selectedRiskFactors: PropTypes.object,
 };

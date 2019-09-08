@@ -17,21 +17,23 @@ import { UnderlinedHeader } from '../../UnderlinedHeader';
 export const Symptoms = (props) => {
   const firebase = useContext(FirebaseContext);
   const [symptoms, setSymptoms] = useState([]);
-  const [selectedSymptoms, setSelectedSymptoms] = useState({});
-  const [profileData, setProfileData] = useState({});
-  const [allowDiagnosis, setAllowDiagnosis] = useState(false);
+  const [selectedSymptoms, setSelectedSymptoms] = useState(props.selectedSymptoms || {});
+  const [profileData, setProfileData] = useState(props.profileData || {});
 
   useEffect(() => {
     const getProfileCollection = async () => {
-      const profileData = await firebase.getUserData(COLLECTIONS.Profile, firebase.authUserId);
-
-      if (profileData) {
-        setProfileData(profileData);
-        setAllowDiagnosis(true);
-        fetchSymptoms();
-      } else {
-        props.f7router.app.dialog.alert('To get diagnosis You need to fill your profile data! Go to Profile tab!');
+      if (isEmpty(profileData)) {
+        const fetchedProfileData = await firebase.getUserData(COLLECTIONS.Profile, firebase.authUserId);
+        
+        if (fetchedProfileData) {
+          setProfileData(fetchedProfileData);
+        } else {
+          props.f7router.app.dialog.alert('To get diagnosis You need to fill your profile data! Go to Profile tab!');
+          return;
+        }
       }
+
+      fetchSymptoms();
     };
 
     getProfileCollection();
@@ -57,13 +59,13 @@ export const Symptoms = (props) => {
 
   return (
     <Page>
-      <Topbar title="Diagnosis" />
+      <Topbar title="Diagnosis" linkProps={{ href: routePath.Home }}/>
       <UnderlinedHeader title="Symptoms" />
       <Block className="text-align-center">
         <BrokenArm className={mergeStyles({ width: '100px', height: '100px' })} />
         <Button
           fill
-          disabled={!allowDiagnosis}
+          disabled={isEmpty(profileData)}
           popupOpen=".symptom-list"
         >
           Add symptoms
@@ -120,4 +122,6 @@ export const Symptoms = (props) => {
 
 Symptoms.propTypes = {
   f7router: PropTypes.object,
+  profileData: PropTypes.object,
+  selectedSymptoms: PropTypes.object,
 };

@@ -41,7 +41,7 @@ export const SideNav = (props) => {
 
   return (
     <Panel left cover>
-      <Topbar panelClose />
+      <Topbar linkProps={{ panelClose: true }} />
       <List simple-list noHairlinesBetween noHairlines>
         {mainMenuItems.map(({ Icon, path, title }) => (
           <ListItem key={path} link={path} title={title} noChevron panelClose="left">

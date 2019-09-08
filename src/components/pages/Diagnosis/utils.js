@@ -68,7 +68,7 @@ const getAgeRiskFactors = (age) => {
     ...getAgeRiskFactors(profileData.age),
   ]);
 
-  export const getEvidence = (symptoms) => map(symptoms, (symptom) => ({
+  export const getSanitizedEvidence = (symptoms) => map(symptoms, (symptom) => ({
     id: symptom.id,
     choice_id: symptom.choice_id,
     initial: !!symptom.initial,

@@ -24,7 +24,7 @@ export const Home = () => {
 
   return (
     <Page>
-      <Topbar iconName={faBars} title={config.name} panelOpen="left" />
+      <Topbar iconName={faBars} title={config.name} linkProps={{ panelOpen: "left" }} />
       <BlockTitle>Welcome to Medical Shepherd!</BlockTitle>
       <Block strong>
         <p>

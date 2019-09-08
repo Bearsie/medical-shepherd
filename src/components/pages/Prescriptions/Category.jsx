@@ -53,7 +53,10 @@ export const Category = (props) => {
 
   return (
     <Page>
-      <Topbar title="Prescriptions" linkPath={someRecordWereDeleted ? routePath.PrescriptionList : undefined} />
+      <Topbar
+        title="Prescriptions"
+        linkProps={someRecordWereDeleted ? { href: routePath.PrescriptionList } : undefined}
+      />
       <UnderlinedHeader title={props.category} />
       <PageContent className="no-padding-top">
         {isEmpty(records) && (

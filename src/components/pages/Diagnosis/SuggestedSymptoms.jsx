@@ -9,10 +9,15 @@ import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction
 import { itemTitleWithNoEllipsis } from '../../../styles';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
-import { getEvidence } from './utils';
+import { getSanitizedEvidence } from './utils';
 
 export const SuggestedSymptoms = (props) => {
-	const [suggestedSymptoms, setSuggestedSymptoms] = useState({});
+  const [suggestedSymptoms, setSuggestedSymptoms] = useState(props.suggestedSymptoms || {});
+  const selectedSymptoms = {
+    ...props.commonRisksFromProfile,
+    ...props.selectedRiskFactors,
+    ...props.selectedSymptoms,
+  };
 
 	useEffect(() => {
 		RegisterBackButtonAction(props.f7router);
@@ -25,7 +30,7 @@ export const SuggestedSymptoms = (props) => {
 	};
 
 	const fetchSymptoms = async () => {
-    const evidence = getEvidence(props.selectedSymptoms);
+    const evidence = getSanitizedEvidence(selectedSymptoms);
 
 		try {
       const { data } = await getSuggestedSymptoms(evidence, props.age, props.sex);
@@ -37,7 +42,16 @@ export const SuggestedSymptoms = (props) => {
   
 	return (
     <Page>
-      <Topbar title="Diagnosis" />
+      <Topbar
+        title="Diagnosis"
+        linkProps={{
+          href: routePath.RiskFactors,
+          routeProps: {
+            selectedRiskFactors: props.selectedRiskFactors,
+            selectedSymptoms: props.selectedSymptoms,
+          },
+        }}
+      />
       <UnderlinedHeader title="Symptoms suggestions" />
       <Block noHairlines className="no-margin-top no-margin-bottom">
         <div className="text-align-justify">
@@ -73,13 +87,13 @@ export const SuggestedSymptoms = (props) => {
           routeProps={{
             age: props.age,
             sex: props.sex,
-            selectedSymptoms: {
-              ...mapValues(suggestedSymptoms, ({ selected, ...symptom }) => ({
+            suggestedSymptoms: mapValues(suggestedSymptoms, ({ selected, ...symptom }) => ({
                 ...symptom,
                 choice_id: selected ? 'present' : 'absent',
               })),
-              ...props.selectedSymptoms,
-            },
+            commonRisksFromProfile: props.commonRisksFromProfile,
+            selectedRiskFactors: props.selectedRiskFactors,
+            selectedSymptoms: props.selectedSymptoms,
           }}
         >
           Continue
@@ -92,6 +106,9 @@ export const SuggestedSymptoms = (props) => {
 SuggestedSymptoms.propTypes = {
   f7router: PropTypes.object,
   age: PropTypes.number,
+  commonRisksFromProfile: PropTypes.object,
+  selectedRiskFactors: PropTypes.object,
   selectedSymptoms: PropTypes.object,
   sex: PropTypes.string,
+  suggestedSymptoms: PropTypes.object,
 };

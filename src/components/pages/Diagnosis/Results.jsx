@@ -93,7 +93,20 @@ export const Results = (props) => {
 
 	return (
     <Page>
-      <Topbar title="Diagnosis" />
+      <Topbar
+        title="Diagnosis"
+        linkProps={{
+          href: routePath.Interview,
+          routeProps: {
+            age: props.age,
+            sex: props.sex,
+            selectedSymptoms: props.selectedSymptoms,
+            suggestedSymptoms: props.suggestedSymptoms,
+            commonRisksFromProfile: props.commonRisksFromProfile,
+            selectedRiskFactors: props.selectedRiskFactors,
+          },
+        }}
+      />
       <UnderlinedHeader title="Results" />
       {bestMatchCondition &&
         <PageContent className="no-padding-top">
@@ -190,4 +203,8 @@ Results.propTypes = {
   conditions: PropTypes.array,
   evidence: PropTypes.object,
   sex: PropTypes.string,
+  selectedSymptoms: PropTypes.object,
+  suggestedSymptoms: PropTypes.object,
+  commonRisksFromProfile: PropTypes.object,
+  selectedRiskFactors: PropTypes.object,
 };

@@ -1,7 +1,7 @@
 import { Dialogs } from '@ionic-native/dialogs';
 import { mergeStyles } from '@uifabric/merge-styles';
 import { Block, BlockTitle, Button, List, Page } from 'framework7-react';
-import { get, isEmpty, keyBy, map, values, pick } from 'lodash';
+import { get, isEmpty, keyBy, map } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { getDiagnosis } from '../../../../api';
@@ -10,16 +10,22 @@ import RegisterBackButtonAction from '../../../../services/RegisterBackButtonAct
 import { InterviewCard } from '../../../Icons';
 import { Topbar } from '../../../Topbar';
 import { UnderlinedHeader } from '../../../UnderlinedHeader';
+import { getSanitizedEvidence } from '../utils';
 import { MultipleGroupQuestion } from './MultipleGroupQuestion';
 import { SingleGroupQuestion } from './SingleGroupQuestion';
 import { SingleQuestion } from './SingleQuestion';
-import { getEvidence } from '../utils';
 
 export const Interview = (props) => {
+  const initialEvidence = {
+    ...props.commonRisksFromProfile,
+    ...props.selectedRiskFactors,
+    ...props.selectedSymptoms,
+    ...props.suggestedSymptoms,
+  };
 	const [interview, setInterview] = useState({});
   const [selectedSymptoms, setSelectedSymptoms] = useState({});
   const [step, setStep] = useState(0);
-  const [evidence, setEvidence] = useState(props.selectedSymptoms);
+  const [evidence, setEvidence] = useState(initialEvidence);
   const [shouldStopInterview, setShouldStopInterview] = useState(false);
 
 	useEffect(() => {
@@ -28,7 +34,7 @@ export const Interview = (props) => {
 
   useEffect(() => {
     fetchDiagnosis();
-    if (step === 1) {
+    if (step === 5) {
       setShouldStopInterview(true);
     }
   }, [step]);
@@ -40,6 +46,10 @@ export const Interview = (props) => {
         age: props.age,
         conditions: interview.conditions,
         sex: props.sex,
+        selectedSymptoms: props.selectedSymptoms,
+        suggestedSymptoms: props.suggestedSymptoms,
+        commonRisksFromProfile: props.commonRisksFromProfile,
+        selectedRiskFactors: props.selectedRiskFactors,
       }});
     }
   }, [shouldStopInterview]);
@@ -50,10 +60,10 @@ export const Interview = (props) => {
 	};
 
 	const fetchDiagnosis = async () => {
-    const evidence = getEvidence(props.selectedSymptoms);
+    const sanitizedEvidence = getSanitizedEvidence(evidence);
 
 		try {
-			const { data } = await getDiagnosis(evidence, props.age, props.sex);
+			const { data } = await getDiagnosis(sanitizedEvidence, props.age, props.sex);
       setInterview(data);
       setShouldStopInterview(data.question.should_stop);
 		} catch(error) {
@@ -65,7 +75,20 @@ export const Interview = (props) => {
 
 	return (
     <Page>
-      <Topbar title="Diagnosis" />
+      <Topbar
+        title="Diagnosis"
+        linkProps={{
+          href: routePath.SuggestedSymptoms,
+          routeProps: {
+            age: props.age,
+            sex: props.sex,
+            commonRisksFromProfile: props.commonRisksFromProfile,
+            selectedRiskFactors: props.selectedRiskFactors,
+            selectedSymptoms: props.selectedSymptoms,
+            suggestedSymptoms: props.suggestedSymptoms,
+          },
+        }}
+      />
       <UnderlinedHeader title="Interview" />
       <Block className="text-align-center">
         <InterviewCard className={mergeStyles({ width: '100px', height: '100px' })} />
@@ -105,8 +128,8 @@ export const Interview = (props) => {
                 ...keyBy(selectedSymptoms, 'id'),
                 ...evidence,
               });
-              setStep(step + 1);
               setSelectedSymptoms({});
+              setStep(step + 1);
             }}
           >
             Continue
@@ -121,5 +144,8 @@ Interview.propTypes = {
   f7router: PropTypes.object,
   age: PropTypes.number,
   selectedSymptoms: PropTypes.object,
+  suggestedSymptoms: PropTypes.object,
+  commonRisksFromProfile: PropTypes.object,
+  selectedRiskFactors: PropTypes.object,
   sex: PropTypes.string,
 };
