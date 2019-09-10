@@ -9,34 +9,30 @@ import { auth, FirebaseContext } from '../Firebase';
 import { Crutches, Files, Head, Pills, Search } from '../Icons';
 import { Topbar } from '../Topbar';
 
-const mainMenuItems = [
-  { title: 'Profile', path: routePath.Profile, Icon: Head },
-  { title: 'Diagnosis', path: routePath.Symptoms, Icon: Search },
-  { title: 'Prescriptions', path: routePath.PrescriptionList, Icon: Pills },
-  { title: 'History', path: routePath.History, Icon: Files },
-];
-
-export const SideNav = (props) => {
+export const SideNav = () => {
   const firebase = useContext(FirebaseContext);
 
-  const handleLogOut = async () => {
-    const answerIndex = await Dialogs.confirm('Do you want to log out?', config.name);
-  
-    if (answerIndex !== 1) return;
+  const mainMenuItems = [
+    { title: 'Profile', path: routePath.Profile, Icon: Head },
+    { title: 'Diagnosis', path: routePath.Symptoms, Icon: Search },
+    { title: 'Prescriptions', path: routePath.PrescriptionList, Icon: Pills },
+    { title: 'History', path: routePath.History, Icon: Files },
+  ];
 
+  const handleLogOut = async (event) => {
+    event.preventDefault();
+    
     try {
       await auth.signOut();
-      firebase.setAuthUserId('');
-      props.f7router.navigate(routePath.Welcome);
     } catch (error) {
       handleError(error);
+    } finally {
+      firebase.setAuthUserId('');
     }
   };
 
   const handleError = (error) => {
-    props.f7router.app.dialog.alert(error.message, () => {
-      console.log(error);
-    });
+    Dialogs.alert(error.message, config.name);
   };
 
   return (
@@ -62,8 +58,4 @@ export const SideNav = (props) => {
       </List>
     </Panel>
   );
-};
-
-SideNav.propTypes = {
-  f7router: PropTypes.object,
 };

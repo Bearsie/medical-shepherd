@@ -1,7 +1,8 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../routes';
+import RegisterBackButtonAction from "../../services/RegisterBackButtonAction";
 import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
 
@@ -9,6 +10,10 @@ export const Register = (props) => {
   const [userName, setUserName] = useState('');
   const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
+
+  useEffect(() => {
+    RegisterBackButtonAction(props.f7router);
+  }, []);
 
   const register = async () => {
     try {
@@ -28,7 +33,7 @@ export const Register = (props) => {
 
   return (
     <Page noToolbar noNavbar noSwipeback loginScreen>
-      <Topbar />
+      <Topbar linkProps={{ href: routePath.Welcome }} />
       <LoginScreenTitle className="no-margin">Register</LoginScreenTitle>
       <Block className="text-align-center">
         You are one step away from better health!<br />
@@ -65,5 +70,4 @@ export const Register = (props) => {
 
 Register.propTypes = {
   f7router: PropTypes.object,
-  social: PropTypes.bool,
 };

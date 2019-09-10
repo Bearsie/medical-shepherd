@@ -1,14 +1,19 @@
 import { Block, Button, List, ListInput, LoginScreenTitle, Page } from "framework7-react";
 import PropTypes from 'prop-types';
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../routes';
+import RegisterBackButtonAction from "../../services/RegisterBackButtonAction";
 import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
 
 export const Login = (props) => {
-  const [userName, setUserName] = useState('');
-  const [password, setPassword] = useState('');
+  const [userName, setUserName] = useState('wojtek.niedzwiedz@gmail.com');
+  const [password, setPassword] = useState('baibai1234');
   const firebase = useContext(FirebaseContext);
+
+  useEffect(() => {
+    RegisterBackButtonAction(props.f7router);
+  }, []);
 
   const signIn = async () => {
     try {
@@ -28,7 +33,7 @@ export const Login = (props) => {
 
   return (
     <Page noToolbar noNavbar noSwipeback loginScreen>
-      <Topbar />
+      <Topbar linkProps={{ href: routePath.Welcome }} />
       <LoginScreenTitle className="no-margin">Log in</LoginScreenTitle>
       <Block className="text-align-center">
         Great to have you here with us!<br />

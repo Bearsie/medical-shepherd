@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { getSuggestedSymptoms } from '../../../api';
 import { routePath } from '../../../routes';
-import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import RegisterBackButtonActionWithConfirmation from '../../../services/RegisterBackButtonActionWithConfirmation';
 import { itemTitleWithNoEllipsis } from '../../../styles';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
@@ -20,7 +20,11 @@ export const SuggestedSymptoms = (props) => {
   };
 
 	useEffect(() => {
-		RegisterBackButtonAction(props.f7router);
+    RegisterBackButtonActionWithConfirmation(
+      props.f7router,
+      routePath.Home,
+      'Do you want to quit diagnosis?',
+    );
 		fetchSymptoms();
   }, []);
 

@@ -5,7 +5,7 @@ import { filter, get, includes, isEmpty, keyBy, map, mapValues, round } from 'lo
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
-import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import RegisterBackButtonActionWithConfirmation from '../../../services/RegisterBackButtonActionWithConfirmation';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../../styles';
 import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { Skull } from '../../Icons';
@@ -18,7 +18,11 @@ export const Results = (props) => {
   const [allDiagnosis, setAllDiagnosis] = useState([]);
 
 	useEffect(() => {
-    RegisterBackButtonAction(props.f7router);
+    RegisterBackButtonActionWithConfirmation(
+      props.f7router,
+      routePath.Home,
+      'Do you want to quit diagnosis?',
+    );
     fetchConditions();
     getAllDiagnosis();
   }, []);

@@ -1,4 +1,5 @@
 import { Dialogs } from '@ionic-native/dialogs';
+import { SplashScreen } from '@ionic-native/splash-screen';
 import { mergeStyleSets } from '@uifabric/merge-styles';
 import { Block, Button, Col, Navbar, NavTitle, Page, PageContent, Row } from 'framework7-react';
 import React, { useEffect, useState } from 'react';
@@ -54,7 +55,11 @@ export const Welcome = () => {
     backgroundImage.src = welcomeImage;
   }, []);
 
-  return isBackroundImageLoaded && (
+  useEffect(() => {
+    if (isBackroundImageLoaded) setTimeout(() => { SplashScreen.hide() }, 1500);
+  }, [isBackroundImageLoaded]);
+
+  return (
     <Page className={styles.page}>
       <Navbar noShadow noHairline className={styles.navbar}>
         <NavTitle className={styles.title}>{config.name}</NavTitle>

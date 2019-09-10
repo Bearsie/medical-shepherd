@@ -6,7 +6,7 @@ import { groupBy, keys, map } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
-import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import Platform from '../../../services/Platform';
 import { COLLECTIONS, FirebaseContext } from '../../Firebase';
 import { Alarm, Bandage, Bootle, BrokenLeg, Clock, CrossedPills, Crutches, Doctor, Drip, Dropper, Head, HeartBeat, HospitalBed, InterviewCard, Lungs, Microscope, OpenPills, Pills, Plus, Scalpel, Search, Sex, Shield, Sign, Stethoscope, Stomach, Syringe, Tooth, Torch } from '../../Icons';
 import { Topbar } from '../../Topbar';
@@ -82,7 +82,12 @@ export const List = (props) => {
   const [prescriptions, setPrescriptions] = useState([]);
   
   useEffect(() => {
-    RegisterBackButtonAction(props.f7router);
+    Platform.registerBackButtonAction(event => {
+      event.preventDefault();
+      props.f7router.navigate(routePath.Home);
+
+      return false;
+    }, 101);
   }, []);
 
   useEffect(() => {
@@ -102,7 +107,7 @@ export const List = (props) => {
 
   return (
     <Page>
-      <Topbar title="Prescriptions" />
+      <Topbar title="Prescriptions" linkProps={{ href: routePath.Home }} />
       <Block className="margin-top-half">
         <Row className={mergeStyles({ justifyContent: 'flex-start'})}>
           <Link

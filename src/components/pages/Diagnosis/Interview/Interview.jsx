@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import React, { useEffect, useState } from 'react';
 import { getDiagnosis } from '../../../../api';
 import { routePath } from '../../../../routes';
-import RegisterBackButtonAction from '../../../../services/RegisterBackButtonAction';
+import RegisterBackButtonActionWithConfirmation from '../../../../services/RegisterBackButtonActionWithConfirmation';
 import { InterviewCard } from '../../../Icons';
 import { Topbar } from '../../../Topbar';
 import { UnderlinedHeader } from '../../../UnderlinedHeader';
@@ -29,7 +29,11 @@ export const Interview = (props) => {
   const [shouldStopInterview, setShouldStopInterview] = useState(false);
 
 	useEffect(() => {
-    RegisterBackButtonAction(props.f7router);
+    RegisterBackButtonActionWithConfirmation(
+      props.f7router,
+      routePath.Home,
+      'Do you want to quit diagnosis?',
+    );
   }, []);
 
   useEffect(() => {

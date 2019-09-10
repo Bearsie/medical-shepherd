@@ -17,7 +17,7 @@ const styles = mergeStyleSets({
 export const Topbar = ({ iconName = faChevronLeft, title ='', linkProps = { back: true } }) => (
   <Navbar noShadow noHairline className={styles.bar} >
     <Link {...linkProps}>
-        <FontAwesomeIcon icon={iconName} />
+      <FontAwesomeIcon icon={iconName} />
     </Link>
     <NavTitle className={styles.title}>{title}</NavTitle>
   </Navbar>

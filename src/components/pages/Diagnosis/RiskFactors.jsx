@@ -5,7 +5,7 @@ import { isEmpty, keyBy, map, omit } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useContext, useEffect, useState } from 'react';
 import { routePath } from '../../../routes';
-import RegisterBackButtonAction from '../../../services/RegisterBackButtonAction';
+import RegisterBackButtonActionWithConfirmation from '../../../services/RegisterBackButtonActionWithConfirmation';
 import { chipWithNoEllipsis } from '../../../styles';
 import { Divider } from '../../Divider';
 import { COLLECTIONS, FirebaseContext } from '../../Firebase';
@@ -22,7 +22,11 @@ export const RiskFactors = (props) => {
   const [profileData, setProfileData] = useState(props.profileData || {});
 
   useEffect(() => {
-    RegisterBackButtonAction(props.f7router);
+    RegisterBackButtonActionWithConfirmation(
+      props.f7router,
+      routePath.Home,
+      'Do you want to quit diagnosis?',
+    );
   }, []);
 
   useEffect(() => {
