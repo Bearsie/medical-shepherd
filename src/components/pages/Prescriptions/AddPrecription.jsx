@@ -10,6 +10,7 @@ import { useValue } from '../../hooks';
 import { RadioSelect } from '../../RadioSelect';
 import { Topbar } from '../../Topbar';
 import { UnderlinedHeader } from '../../UnderlinedHeader';
+import RegisterBackButtonActionWithConfirmation from '../../../services/RegisterBackButtonActionWithConfirmation';
 
 const categories = [
   'Allergology',
@@ -48,8 +49,14 @@ export const AddPrescription = (props) => {
   const [title, setTitle] = useState('');
   const [image, setImage] = useState(undefined);
 
+  console.log('prescriptions', props.prescriptions)
+
   useEffect(() => {
-    RegisterBackButtonAction(props.f7router);
+    RegisterBackButtonActionWithConfirmation(
+      props.f7router,
+      routePath.Home,
+      'Do you want to abort adding prescription?',
+    );
   }, []);
 
   const handleSaveChanges = async () => {
@@ -60,7 +67,7 @@ export const AddPrescription = (props) => {
     };
 
     try {
-      await firebase.updateUserData(
+      await firebase.setUserData(
         COLLECTIONS.Prescriptions,
         firebase.authUserId,
         { prescriptions: [...props.prescriptions, newPrescription] },

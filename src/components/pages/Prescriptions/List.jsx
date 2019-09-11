@@ -118,6 +118,7 @@ export const List = (props) => {
             routeProps={{
               category: 'Recent',
               prescriptions,
+              allPrescriptions: prescriptions,
             }}
           >
               <div>Recent</div>

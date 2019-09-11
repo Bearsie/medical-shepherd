@@ -26,6 +26,8 @@ export const Category = (props) => {
   }, []);
 
   const handleDeleteRecord = (recordId) => () => {
+    console.log(allPrescriptions)
+    console.log(recordId, reject(records, ['date', recordId]), reject(allPrescriptions, ['date', recordId]));
     setRecords(reject(records, ['date', recordId]));
     setAllPrescriptions(reject(allPrescriptions, ['date', recordId]));
     setAreDeletedRecords(true);
