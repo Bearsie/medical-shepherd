@@ -2,13 +2,13 @@ import { mergeStyles } from '@uifabric/merge-styles';
 import { AccordionContent, Block, BlockTitle, Button, Gauge, List, ListItem, Page, PageContent, SwipeoutActions, SwipeoutButton } from 'framework7-react';
 import { isEmpty, map, orderBy, reject, round } from 'lodash';
 import PropTypes from 'prop-types';
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { routePath } from '../../routes';
 import RegisterBackButtonAction from '../../services/RegisterBackButtonAction';
 import { colorPrimary, itemTitleWithNoEllipsis } from '../../styles';
+import { COLLECTIONS, FirebaseContext } from '../Firebase';
 import { Files } from '../Icons';
 import { Topbar } from '../Topbar';
-import { COLLECTIONS, FirebaseContext } from '../Firebase';
-import { routePath } from '../../routes';
 
 const dateOptions = {
   weekday: 'long',
@@ -24,7 +24,6 @@ export const History = (props) => {
   const [records, setRecords] = useState({});
   const [areDeletedRecords, setAreDeletedRecords] = useState(false);
   const [allDiagnosis, setAllDiagnosis] = useState([]);
-  const [someRecordWereDeleted, setSomeRecordWereDeleted] = useState(false);
 
   useEffect(() => {
     RegisterBackButtonAction(props.f7router);
@@ -57,7 +56,6 @@ export const History = (props) => {
   
       props.f7router.app.dialog.alert('Changes saved!');
       setAreDeletedRecords(false);
-      setSomeRecordWereDeleted(true);
     } catch (error) {
       onError(error);
     }
@@ -111,21 +109,24 @@ export const History = (props) => {
                 <Block>
                   <ul>
                     <ListItem
-                      className={itemTitleWithNoEllipsis}
+                      className={mergeStyles([itemTitleWithNoEllipsis, 'bg-color-primary', 'text-color-white'])}
                       title="Symptoms"
                       groupTitle
                     />
                     <List accordionList>
                       {map(result.symptoms, (symptom) =>
                         <ListItem
-                          className={itemTitleWithNoEllipsis}
+                          className={mergeStyles([
+                            itemTitleWithNoEllipsis,
+                            symptom.choice_id === 'present' ? 'text-color-primary' : 'text-color-red',
+                          ])}
                           key={symptom.id}
                           title={symptom.common_name}
                         />
                       )}
                     </List>
                     <ListItem
-                      className={itemTitleWithNoEllipsis}
+                      className={mergeStyles([itemTitleWithNoEllipsis, 'bg-color-primary', 'text-color-white'])}
                       title="Diagnosis"
                       groupTitle
                     />
