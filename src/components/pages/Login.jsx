@@ -7,8 +7,8 @@ import { auth, FirebaseContext } from '../Firebase';
 import { Topbar } from '../Topbar';
 
 export const Login = (props) => {
-  const [userName, setUserName] = useState('wojtek.niedzwiedz@gmail.com');
-  const [password, setPassword] = useState('baibai1234');
+  const [userName, setUserName] = useState('');
+  const [password, setPassword] = useState('');
   const firebase = useContext(FirebaseContext);
 
   useEffect(() => {
