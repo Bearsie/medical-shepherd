@@ -38,9 +38,6 @@ export const Interview = (props) => {
 
   useEffect(() => {
     fetchDiagnosis();
-    if (step === 5) {
-      setShouldStopInterview(true);
-    }
   }, [step]);
 
   useEffect(() => {
